@@ -972,8 +972,6 @@
           target.insertBefore(document.createTextNode(text[i]), cursor);
           i++;
           if (i % 80 === 0) playPageTurnSound();
-          // Auto-scroll so cursor is always in view while typing
-          cursor.scrollIntoView({ behavior: "smooth", block: "end" });
           setTimeout(type, speed);
         } else {
           cursor.remove();
@@ -989,25 +987,26 @@
 
       blocks.forEach((block) => {
         const rawText = block.getAttribute("data-text") || "";
-        const twDuration = rawText.length * 18 + 400;
 
         setTimeout(() => {
           block.classList.add("shown");
           playPageTurnSound();
-          // Scroll block into view first, then typewriter takes over
-          block.scrollIntoView({ behavior: "smooth", block: "start" });
-          setTimeout(() => typewriterInto(block, rawText), 400);
+          typewriterInto(block, rawText);
+          // Scroll once — smoothly bring the new paragraph into view
+          setTimeout(() => {
+            block.scrollIntoView({ behavior: "smooth", block: "center" });
+          }, 120);
         }, delay);
 
-        delay += Math.max(rawText.length * 18 + 800, 1600);
+        delay += Math.max(rawText.length * 18 + 800, 2000);
       });
 
-      const sigDelay = delay + 600;
+      const sigDelay = delay + 800;
       setTimeout(() => {
         const sig = document.getElementById("signatureBlock");
         if (sig) {
           sig.classList.add("shown");
-          sig.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          setTimeout(() => sig.scrollIntoView({ behavior: "smooth", block: "center" }), 120);
         }
       }, sigDelay);
 
@@ -1015,7 +1014,7 @@
         const finalMsg = document.getElementById("finalWifeMessage");
         if (finalMsg) {
           finalMsg.classList.add("shown");
-          finalMsg.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          setTimeout(() => finalMsg.scrollIntoView({ behavior: "smooth", block: "center" }), 120);
         }
       }, sigDelay + 3000);
     }
