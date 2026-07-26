@@ -4,18 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Happy Birthday, My Love ❤️ | A Love Letter</title>
-    <meta
-      name="description"
-      content="A cinematic, luxury handwritten love letter experience."
-    />
+    <meta name="description" content="A cinematic, luxury handwritten love letter experience." />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Great+Vibes&family=Parisienne&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Great+Vibes&family=Parisienne&display=swap" rel="stylesheet" />
 
     <style>
       :root {
@@ -33,11 +27,7 @@
         --font-sig: 'Parisienne', cursive;
       }
 
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
 
       html {
         scroll-behavior: smooth;
@@ -54,7 +44,38 @@
         -webkit-font-smoothing: antialiased;
       }
 
-      /* Initial Fade from Black Overlay */
+      /* ── Scroll Progress Bar ── */
+      #scrollProgress {
+        position: fixed;
+        top: 0; left: 0;
+        width: 0%;
+        height: 3px;
+        background: linear-gradient(90deg, #b8733e, #e0b096, #b8733e);
+        z-index: 2000;
+        transition: width 0.1s linear;
+        pointer-events: none;
+      }
+
+      /* ── Background SVG Floral Pattern ── */
+      #floralBg {
+        position: fixed;
+        inset: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.055;
+      }
+
+      /* ── Cursor Trail Canvas ── */
+      #cursorCanvas {
+        position: fixed;
+        inset: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 999;
+      }
+
+      /* ── Initial Fade from Black ── */
       #blackOverlay {
         position: fixed;
         inset: 0;
@@ -64,37 +85,40 @@
         transition: opacity 1.8s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
-      /* Ambient Lighting Glows */
+      /* ── Confetti Canvas ── */
+      #confettiCanvas {
+        position: fixed;
+        inset: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 50;
+      }
+
+      /* ── Ambient Glows ── */
       .ambient-glow {
         position: fixed;
-        width: 500px;
-        height: 500px;
+        width: 500px; height: 500px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(224, 176, 150, 0.22) 0%, rgba(253, 251, 247, 0) 70%);
+        background: radial-gradient(circle, rgba(224,176,150,0.22) 0%, rgba(253,251,247,0) 70%);
         filter: blur(70px);
         pointer-events: none;
         z-index: 0;
       }
-
-      .glow-top { top: -120px; left: 50%; transform: translateX(-50%); }
+      .glow-top  { top: -120px; left: 50%; transform: translateX(-50%); }
       .glow-bottom { bottom: -120px; right: -80px; }
 
-      /* Particle Canvas (Dust & Rose Petals) */
+      /* ── Particle Canvas ── */
       #particleCanvas {
         position: fixed;
         inset: 0;
-        width: 100%;
-        height: 100%;
+        width: 100%; height: 100%;
         pointer-events: none;
         z-index: 1;
         transition: filter 1.2s ease;
       }
+      body.letter-active #particleCanvas { filter: blur(2px); }
 
-      body.letter-active #particleCanvas {
-        filter: blur(2px);
-      }
-
-      /* Main Viewport Container */
+      /* ── App Viewport ── */
       .app-viewport {
         position: relative;
         z-index: 5;
@@ -106,34 +130,25 @@
         padding: 40px 18px 80px;
         transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
       }
+      .app-viewport.zoom-in { transform: scale(1.03); }
 
-      .app-viewport.zoom-in {
-        transform: scale(1.03);
-      }
-
-      /* Floating Music Widget */
+      /* ── Music Widget ── */
       .music-widget {
         position: fixed;
-        top: 24px;
-        right: 24px;
+        top: 24px; right: 24px;
         z-index: 100;
         opacity: 0;
         transform: translateY(-12px);
-        transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: opacity 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1);
         pointer-events: none;
       }
-
-      .music-widget.visible {
-        opacity: 1;
-        transform: translateY(0);
-        pointer-events: auto;
-      }
+      .music-widget.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
 
       .music-btn {
-        background: rgba(253, 251, 247, 0.88);
+        background: rgba(253,251,247,0.88);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(184, 115, 62, 0.3);
+        border: 1px solid rgba(184,115,62,0.3);
         color: var(--rose-gold-dark);
         font-family: var(--font-body);
         font-size: 0.95rem;
@@ -144,159 +159,157 @@
         display: inline-flex;
         align-items: center;
         gap: 10px;
-        box-shadow: 0 8px 30px rgba(184, 115, 62, 0.15);
-        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 8px 30px rgba(184,115,62,0.15);
+        transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
       }
-
-      .music-btn:hover {
-        background: #ffffff;
-        transform: translateY(-2px);
-        box-shadow: 0 12px 35px rgba(184, 115, 62, 0.22);
-      }
+      .music-btn:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 12px 35px rgba(184,115,62,0.22); }
 
       .music-pulse {
-        width: 8px;
-        height: 8px;
+        width: 8px; height: 8px;
         border-radius: 50%;
         background: var(--rose-gold);
         animation: softPulse 2s infinite ease-in-out;
       }
-
       @keyframes softPulse {
-        0%, 100% { transform: scale(0.8); opacity: 0.4; }
-        50% { transform: scale(1.3); opacity: 1; }
+        0%,100% { transform: scale(0.8); opacity: 0.4; }
+        50%      { transform: scale(1.3); opacity: 1; }
       }
 
-      /* Stage Wrapper */
+      /* ── Stage ── */
       .stage-wrapper {
-        width: 100%;
-        max-width: 720px;
+        width: 100%; max-width: 720px;
         perspective: 1200px;
         display: flex;
         flex-direction: column;
         align-items: center;
       }
 
-      /* ENVELOPE DESIGN */
+      /* ── Envelope ── */
       .envelope-wrapper {
         position: relative;
-        width: 100%;
-        max-width: 490px;
+        width: 100%; max-width: 490px;
         height: 320px;
         cursor: pointer;
         animation: floatEnvelope 6s ease-in-out infinite;
-        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+        transition: transform 0.8s cubic-bezier(0.16,1,0.3,1), opacity 0.8s ease;
+        /* Ripple context */
+        overflow: hidden;
+        border-radius: 16px;
       }
-
       @keyframes floatEnvelope {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
+        0%,100% { transform: translateY(0); }
+        50%      { transform: translateY(-10px); }
+      }
+      .envelope-wrapper:hover { animation-play-state: paused; transform: translateY(-8px) scale(1.015); }
+
+      /* Shake hint */
+      @keyframes shakeHint {
+        0%,100% { transform: translateX(0) translateY(0); }
+        15%      { transform: translateX(-6px) translateY(-3px); }
+        30%      { transform: translateX(6px) translateY(-3px); }
+        45%      { transform: translateX(-4px) translateY(-6px); }
+        60%      { transform: translateX(4px) translateY(-6px); }
+        75%      { transform: translateX(-2px) translateY(-3px); }
+      }
+      .envelope-wrapper.shake {
+        animation: shakeHint 0.7s ease-in-out;
       }
 
-      .envelope-wrapper:hover {
-        animation-play-state: paused;
-        transform: translateY(-8px) scale(1.015);
+      /* Tap ripple */
+      .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255,180,160,0.45);
+        transform: scale(0);
+        animation: rippleAnim 0.7s linear;
+        pointer-events: none;
+      }
+      @keyframes rippleAnim {
+        to { transform: scale(4); opacity: 0; }
       }
 
       .envelope {
         position: relative;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(145deg, #f4eae1 0%, #eae0d5 100%);
+        width: 100%; height: 100%;
+        background: linear-gradient(160deg, #fce8e2 0%, #f5cfc6 45%, #e8b4aa 100%);
         border-radius: 16px;
-        box-shadow: 0 25px 60px rgba(184, 115, 62, 0.18), 0 10px 25px rgba(0, 0, 0, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 25px 60px rgba(184,90,80,0.22), 0 10px 25px rgba(0,0,0,0.06);
+        border: 1px solid rgba(255,210,200,0.9);
         transform-style: preserve-3d;
       }
 
       /* Envelope Flap */
       .envelope-flap {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 170px;
-        background: linear-gradient(180deg, #f8efe6 0%, #e6dace 100%);
+        top: 0; left: 0;
+        width: 100%; height: 170px;
+        background: linear-gradient(180deg, #fad4cc 0%, #ecb8b0 100%);
         clip-path: polygon(0 0, 50% 100%, 100% 0);
         transform-origin: top center;
-        transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: transform 0.9s cubic-bezier(0.4,0,0.2,1);
         z-index: 5;
         border-top-left-radius: 16px;
         border-top-right-radius: 16px;
       }
+      .envelope-wrapper.is-open .envelope-flap { transform: rotateX(180deg); z-index: 1; }
 
-      .envelope-wrapper.is-open .envelope-flap {
-        transform: rotateX(180deg);
-        z-index: 1;
-      }
-
-      /* Envelope Pocket Front */
+      /* Envelope Pocket */
       .envelope-pocket {
         position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 180px;
-        background: linear-gradient(0deg, #e3d7cb 0%, #eddcd0 100%);
+        bottom: 0; left: 0;
+        width: 100%; height: 180px;
+        background: linear-gradient(0deg, #dfa09a 0%, #ecb8b0 100%);
         clip-path: polygon(0 100%, 50% 36%, 100% 100%);
         z-index: 4;
         border-bottom-left-radius: 16px;
         border-bottom-right-radius: 16px;
       }
 
-      /* Rose-Gold Wax Seal */
+      /* Satin Ribbon */
+      .envelope-ribbon {
+        position: absolute;
+        top: 50%; left: 0;
+        width: 100%;
+        transform: translateY(-50%);
+        z-index: 7;
+        pointer-events: none;
+      }
+
+      /* Wax Seal */
       .wax-seal {
         position: absolute;
-        top: 148px;
-        left: 50%;
+        top: 148px; left: 50%;
         transform: translate(-50%, -50%);
-        width: 90px;
-        height: 90px;
+        width: 104px; height: 104px;
         background: radial-gradient(circle at 35% 35%, #d8966c 0%, #b8733e 65%, #8a4d22 100%);
         border-radius: 50%;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 8px 22px rgba(138, 77, 34, 0.35), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -3px 6px rgba(0, 0, 0, 0.3);
-        border: 2px dashed rgba(255, 245, 235, 0.4);
-        z-index: 6;
+        gap: 4px;
+        box-shadow: 0 8px 22px rgba(138,77,34,0.4), inset 0 2px 4px rgba(255,255,255,0.6), inset 0 -3px 6px rgba(0,0,0,0.3);
+        border: 2px dashed rgba(255,245,235,0.5);
+        z-index: 8;
         transition: transform 0.6s ease, opacity 0.6s ease;
       }
-
-      .wax-seal-heart {
-        font-size: 1.3rem;
-        color: #fffaf5;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.25);
-        margin-bottom: 2px;
-      }
-
+      .wax-seal-heart { font-size: 1.4rem; color: #fffaf5; text-shadow: 0 2px 4px rgba(0,0,0,0.25); line-height: 1; }
       .wax-seal-text {
         font-family: var(--font-body);
-        font-size: 0.62rem;
-        font-weight: 600;
-        letter-spacing: 0.08em;
+        font-size: 0.58rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
         text-transform: uppercase;
         color: #fffaf5;
         text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         text-align: center;
-        padding: 0 6px;
-        line-height: 1.2;
+        width: 76px;
+        line-height: 1.3;
       }
+      .envelope-wrapper.is-open .wax-seal { transform: translate(-50%,-50%) scale(0.15); opacity: 0; pointer-events: none; }
 
-      .envelope-wrapper.is-open .wax-seal {
-        transform: translate(-50%, -50%) scale(0.15);
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      /* Envelope Subtitle Hint */
-      .open-hint {
-        margin-top: 28px;
-        text-align: center;
-        transition: opacity 0.6s ease;
-      }
-
+      /* Open Hint */
+      .open-hint { margin-top: 28px; text-align: center; transition: opacity 0.6s ease; }
       .open-time {
         font-family: var(--font-body);
         font-size: 0.95rem;
@@ -304,124 +317,100 @@
         text-transform: uppercase;
         color: var(--rose-gold-dark);
         font-weight: 500;
-        background: rgba(253, 251, 247, 0.7);
+        background: rgba(253,251,247,0.7);
         padding: 8px 24px;
         border-radius: 50px;
-        border: 1px solid rgba(184, 115, 62, 0.25);
+        border: 1px solid rgba(184,115,62,0.25);
         backdrop-filter: blur(10px);
         display: inline-block;
       }
 
-      /* EXPENSIVE STATIONERY LETTER PAPER */
+      /* ── Letter Paper ── */
       .letter-container {
         position: relative;
-        width: 100%;
-        max-width: 710px;
+        width: 100%; max-width: 710px;
         display: none;
         opacity: 0;
         transform: translateY(40px) scale(0.97);
-        transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1), transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: opacity 1.4s cubic-bezier(0.16,1,0.3,1), transform 1.4s cubic-bezier(0.16,1,0.3,1);
         z-index: 10;
       }
-
-      .letter-container.visible {
-        display: block;
-      }
-
-      .letter-container.unfolded {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+      .letter-container.visible { display: block; }
+      .letter-container.unfolded { opacity: 1; transform: translateY(0) scale(1); }
 
       .letter-paper {
         background: linear-gradient(175deg, #fdfbf7 0%, #faf6f0 100%);
         border-radius: 16px;
         padding: 76px 60px 64px;
-        box-shadow: 0 30px 80px rgba(184, 115, 62, 0.14), 0 10px 30px rgba(0, 0, 0, 0.04);
+        box-shadow: 0 30px 80px rgba(184,115,62,0.14), 0 10px 30px rgba(0,0,0,0.04);
         border: 1px solid #ebdcd0;
         position: relative;
+        /* Lined paper texture via repeating-linear-gradient */
+        background-image:
+          linear-gradient(175deg, #fdfbf7 0%, #faf6f0 100%),
+          repeating-linear-gradient(
+            to bottom,
+            transparent,
+            transparent 39px,
+            rgba(184,115,62,0.07) 39px,
+            rgba(184,115,62,0.07) 40px
+          );
+        background-blend-mode: multiply;
       }
-
-      /* Thin Inner Gold Border */
       .letter-paper::before {
         content: '';
         position: absolute;
         inset: 18px;
-        border: 1px solid rgba(184, 115, 62, 0.28);
+        border: 1px solid rgba(184,115,62,0.28);
         border-radius: 10px;
         pointer-events: none;
       }
 
-      /* Filigree Corner Vectors */
-      .floral-corner {
-        position: absolute;
-        width: 60px;
-        height: 60px;
-        color: var(--rose-gold);
-        opacity: 0.4;
-        pointer-events: none;
-      }
-
+      /* Floral Corners */
+      .floral-corner { position: absolute; width: 60px; height: 60px; color: var(--rose-gold); opacity: 0.4; pointer-events: none; }
       .floral-tl { top: 24px; left: 24px; }
       .floral-tr { top: 24px; right: 24px; transform: scaleX(-1); }
       .floral-bl { bottom: 24px; left: 24px; transform: scaleY(-1); }
       .floral-br { bottom: 24px; right: 24px; transform: scale(-1); }
 
-      /* Letter Title & Date */
-      .letter-header {
-        text-align: center;
-        margin-bottom: 40px;
-      }
-
+      /* Letter Header */
+      .letter-header { text-align: center; margin-bottom: 40px; }
       .letter-title {
         font-family: var(--font-title);
         font-size: clamp(3.2rem, 7.5vw, 4.8rem);
         color: var(--rose-gold-dark);
         font-weight: 400;
         line-height: 1.15;
-        text-shadow: 0 2px 10px rgba(184, 115, 62, 0.12);
+        text-shadow: 0 2px 10px rgba(184,115,62,0.12);
       }
+      .letter-date { font-family: var(--font-body); font-size: 1.05rem; font-style: italic; color: var(--text-muted); margin-top: 10px; letter-spacing: 0.05em; }
+      .letter-divider { width: 140px; height: 1px; background: linear-gradient(90deg, transparent, var(--rose-gold-light), transparent); margin: 20px auto 0; }
 
-      .letter-date {
-        font-family: var(--font-body);
-        font-size: 1.05rem;
-        font-style: italic;
-        color: var(--text-muted);
-        margin-top: 10px;
-        letter-spacing: 0.05em;
-      }
-
-      .letter-divider {
-        width: 140px;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, var(--rose-gold-light), transparent);
-        margin: 20px auto 0;
-      }
-
-      /* Letter Body & Paragraph Animation */
-      .letter-body {
-        font-family: var(--font-body);
-        font-size: 1.3rem;
-        line-height: 2.05;
-        color: var(--text-dark);
-        font-weight: 400;
-      }
+      /* Letter Body */
+      .letter-body { font-family: var(--font-body); font-size: 1.3rem; line-height: 2.05; color: var(--text-dark); font-weight: 400; }
 
       .reveal-block {
         opacity: 0;
         transform: translateY(18px);
-        transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: opacity 1.2s cubic-bezier(0.16,1,0.3,1), transform 1.2s cubic-bezier(0.16,1,0.3,1);
         margin-bottom: 24px;
         text-align: justify;
       }
+      .reveal-block.shown { opacity: 1; transform: translateY(0); }
 
-      .reveal-block.shown {
-        opacity: 1;
-        transform: translateY(0);
+      /* Typewriter cursor */
+      .tw-cursor {
+        display: inline-block;
+        width: 2px; height: 1.1em;
+        background: var(--rose-gold);
+        margin-left: 2px;
+        vertical-align: text-bottom;
+        animation: blink 0.75s step-end infinite;
       }
+      @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
 
       .letter-quote {
-        background: rgba(184, 115, 62, 0.06);
+        background: rgba(184,115,62,0.06);
         border-left: 3px solid var(--rose-gold);
         padding: 18px 26px;
         margin: 32px 0;
@@ -431,141 +420,95 @@
         border-radius: 0 10px 10px 0;
         line-height: 1.9;
       }
+      .letter-highlight-line { font-weight: 600; color: var(--rose-gold-dark); }
 
-      .letter-highlight-line {
-        font-weight: 600;
-        color: var(--rose-gold-dark);
-      }
+      .heart-divider { text-align: center; margin: 40px 0 30px; color: var(--rose-gold); font-size: 1.2rem; letter-spacing: 12px; opacity: 0.6; }
 
-      /* Heart Divider before Signature */
-      .heart-divider {
-        text-align: center;
-        margin: 40px 0 30px;
-        color: var(--rose-gold);
-        font-size: 1.2rem;
-        letter-spacing: 12px;
-        opacity: 0.6;
-      }
-
-      /* Signature Section */
+      /* Signature */
       .signature-block {
-        text-align: right;
-        margin-top: 40px;
-        opacity: 0;
-        transform: translateY(15px);
+        text-align: right; margin-top: 40px;
+        opacity: 0; transform: translateY(15px);
         transition: opacity 1.5s ease, transform 1.5s ease;
       }
+      .signature-block.shown { opacity: 1; transform: translateY(0); }
+      .sig-intro { font-family: var(--font-body); font-size: 1.15rem; color: var(--text-muted); font-style: italic; margin-bottom: 6px; }
+      .sig-handwritten { font-family: var(--font-sig); font-size: 3.6rem; color: var(--rose-gold-dark); line-height: 1.1; display: inline-flex; align-items: center; gap: 8px; }
 
-      .signature-block.shown {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      .sig-intro {
-        font-family: var(--font-body);
-        font-size: 1.15rem;
-        color: var(--text-muted);
-        font-style: italic;
-        margin-bottom: 6px;
-      }
-
-      .sig-handwritten {
-        font-family: var(--font-sig);
-        font-size: 3.6rem;
-        color: var(--rose-gold-dark);
-        line-height: 1.1;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      /* Final Centered Reveal Message */
+      /* Final Message */
       .final-wife-message {
-        margin-top: 60px;
-        text-align: center;
+        margin-top: 60px; text-align: center;
         padding: 30px 20px;
-        background: rgba(184, 115, 62, 0.05);
+        background: rgba(184,115,62,0.05);
         border-radius: 12px;
-        border: 1px solid rgba(184, 115, 62, 0.2);
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 2s cubic-bezier(0.16, 1, 0.3, 1), transform 2s cubic-bezier(0.16, 1, 0.3, 1);
+        border: 1px solid rgba(184,115,62,0.2);
+        opacity: 0; transform: translateY(20px);
+        transition: opacity 2s cubic-bezier(0.16,1,0.3,1), transform 2s cubic-bezier(0.16,1,0.3,1);
       }
+      .final-wife-message.shown { opacity: 1; transform: translateY(0); }
+      .wife-line-main { font-family: var(--font-body); font-size: 1.45rem; font-style: italic; color: var(--rose-gold-dark); font-weight: 500; line-height: 1.6; margin-bottom: 12px; }
+      .forever-line { font-family: var(--font-body); font-size: 1.05rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-muted); }
 
-      .final-wife-message.shown {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      .wife-line-main {
-        font-family: var(--font-body);
-        font-size: 1.45rem;
-        font-style: italic;
-        color: var(--rose-gold-dark);
-        font-weight: 500;
-        line-height: 1.6;
-        margin-bottom: 12px;
-      }
-
-      .forever-line {
-        font-family: var(--font-body);
-        font-size: 1.05rem;
-        letter-spacing: 0.25em;
-        text-transform: uppercase;
-        color: var(--text-muted);
-      }
-
-      /* Mobile Tweaks */
+      /* ── Mobile ── */
       @media (max-width: 680px) {
-        .letter-paper {
-          padding: 52px 26px 44px;
-        }
-
-        .letter-paper::before {
-          inset: 12px;
-        }
-
-        .envelope-wrapper {
-          height: 290px;
-        }
-
-        .envelope-flap {
-          height: 150px;
-        }
-
-        .wax-seal {
-          top: 135px;
-          width: 80px;
-          height: 80px;
-        }
-
-        .letter-body {
-          font-size: 1.16rem;
-          line-height: 1.85;
-        }
-
-        .reveal-block {
-          text-align: left;
-        }
-
-        .sig-handwritten {
-          font-size: 3rem;
-        }
+        .letter-paper { padding: 52px 26px 44px; }
+        .letter-paper::before { inset: 12px; }
+        .envelope-wrapper { height: 290px; }
+        .envelope-flap { height: 150px; }
+        .wax-seal { top: 135px; width: 80px; height: 80px; }
+        .letter-body { font-size: 1.16rem; line-height: 1.85; }
+        .reveal-block { text-align: left; }
+        .sig-handwritten { font-size: 3rem; }
       }
     </style>
   </head>
   <body>
-    <!-- Initial Black Overlay for Fade-In -->
+
+    <!-- Scroll Progress Bar -->
+    <div id="scrollProgress"></div>
+
+    <!-- Background Floral SVG Pattern -->
+    <svg id="floralBg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <pattern id="floralPat" x="0" y="0" width="160" height="160" patternUnits="userSpaceOnUse">
+          <!-- rose bud -->
+          <circle cx="30" cy="30" r="10" fill="none" stroke="#b8733e" stroke-width="1.2"/>
+          <path d="M30,20 Q36,14 42,20 Q36,28 30,30 Q24,28 18,20 Q24,14 30,20Z" fill="#b8733e" opacity="0.5"/>
+          <!-- stem + leaf -->
+          <line x1="30" y1="30" x2="30" y2="50" stroke="#7a4625" stroke-width="1"/>
+          <path d="M30,42 Q22,38 20,32" fill="none" stroke="#7a4625" stroke-width="0.9"/>
+          <!-- small scatter petals -->
+          <ellipse cx="90" cy="70" rx="6" ry="3" fill="#e0b096" opacity="0.6" transform="rotate(30 90 70)"/>
+          <ellipse cx="130" cy="120" rx="5" ry="2.5" fill="#b8733e" opacity="0.45" transform="rotate(-20 130 120)"/>
+          <ellipse cx="55" cy="110" rx="4" ry="2" fill="#e0b096" opacity="0.5" transform="rotate(50 55 110)"/>
+          <!-- tiny hearts -->
+          <text x="108" y="42" font-size="10" fill="#b8733e" opacity="0.5">♥</text>
+          <text x="10" y="140" font-size="8" fill="#b8733e" opacity="0.4">♥</text>
+          <!-- branch -->
+          <path d="M140,10 Q150,40 140,80" fill="none" stroke="#7a4625" stroke-width="0.8"/>
+          <path d="M140,30 Q128,25 124,18" fill="none" stroke="#7a4625" stroke-width="0.7"/>
+          <ellipse cx="122" cy="16" rx="5" ry="2.5" fill="#e0b096" opacity="0.5" transform="rotate(-30 122 16)"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#floralPat)"/>
+    </svg>
+
+    <!-- Cursor Trail Canvas -->
+    <canvas id="cursorCanvas"></canvas>
+
+    <!-- Black Overlay -->
     <div id="blackOverlay"></div>
 
-    <!-- Soft Ambient Light Glows -->
+    <!-- Confetti Canvas -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Ambient Glows -->
     <div class="ambient-glow glow-top"></div>
     <div class="ambient-glow glow-bottom"></div>
 
-    <!-- Particle Canvas for Light Dust & Subtle Rose Petals -->
+    <!-- Particle Canvas -->
     <canvas id="particleCanvas"></canvas>
 
-    <!-- Floating Music Controls Widget -->
+    <!-- Music Widget -->
     <div class="music-widget" id="musicWidget">
       <button class="music-btn" id="musicToggleBtn" onclick="toggleMusic()">
         <span class="music-pulse"></span>
@@ -577,11 +520,25 @@
     <div class="app-viewport" id="appViewport">
       <div class="stage-wrapper">
 
-        <!-- Handcrafted Envelope -->
+        <!-- Envelope -->
         <div class="envelope-wrapper" id="envelopeWrapper" onclick="openLoveLetter()">
           <div class="envelope">
             <div class="envelope-flap"></div>
             <div class="envelope-pocket"></div>
+
+            <!-- Satin Ribbon SVG -->
+            <svg class="envelope-ribbon" viewBox="0 0 490 18" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="ribGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%"   stop-color="#f5d5c8"/>
+                  <stop offset="40%"  stop-color="#d48070"/>
+                  <stop offset="60%"  stop-color="#c06858"/>
+                  <stop offset="100%" stop-color="#e8a898"/>
+                </linearGradient>
+              </defs>
+              <rect x="0" y="4" width="490" height="10" rx="5" fill="url(#ribGrad)" opacity="0.85"/>
+              <rect x="0" y="7"  width="490" height="4"  rx="2" fill="rgba(255,230,220,0.4)"/>
+            </svg>
 
             <div class="wax-seal">
               <span class="wax-seal-heart">❤️</span>
@@ -594,82 +551,56 @@
           <span class="open-time">Open Me ✨</span>
         </div>
 
-        <!-- Expensive Stationery Love Letter -->
+        <!-- Letter -->
         <div class="letter-container" id="letterContainer">
           <div class="letter-paper">
 
-            <!-- Floral Corner Ornaments -->
             <svg class="floral-corner floral-tl" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20" />
-              <circle cx="25" cy="25" r="3.5" fill="currentColor" />
+              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20"/>
+              <circle cx="25" cy="25" r="3.5" fill="currentColor"/>
             </svg>
             <svg class="floral-corner floral-tr" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20" />
-              <circle cx="25" cy="25" r="3.5" fill="currentColor" />
+              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20"/>
+              <circle cx="25" cy="25" r="3.5" fill="currentColor"/>
             </svg>
             <svg class="floral-corner floral-bl" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20" />
-              <circle cx="25" cy="25" r="3.5" fill="currentColor" />
+              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20"/>
+              <circle cx="25" cy="25" r="3.5" fill="currentColor"/>
             </svg>
             <svg class="floral-corner floral-br" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20" />
-              <circle cx="25" cy="25" r="3.5" fill="currentColor" />
+              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20"/>
+              <circle cx="25" cy="25" r="3.5" fill="currentColor"/>
             </svg>
 
-            <!-- Letter Title & Date -->
             <div class="letter-header">
-              <h1 class="letter-title">Happy Birthday,<br />My Love ❤️</h1>
+              <h1 class="letter-title">Happy Birthday,<br/>My Love ❤️</h1>
               <p class="letter-date" id="currentDateString">July 26, 2026</p>
               <div class="letter-divider"></div>
             </div>
 
-            <!-- Letter Content (Sequential Reveal Blocks) -->
             <div class="letter-body">
-              <div class="reveal-block">
-                <p>
-                  There are so many reasons why I'm grateful for you, but one memory will always stay with me. During one of the hardest phases of my life, when I felt lost, stressed, and didn't know how to move forward, you never gave up on me. You stood beside me, gave me your time, your care, and your strength when I needed it the most. I'll never forget that.
-                </p>
-              </div>
+              <div class="reveal-block" data-text="There are so many reasons why I'm grateful for you, but one memory will always stay with me. During one of the hardest phases of my life, when I felt lost, stressed, and didn't know how to move forward, you never gave up on me. You stood beside me, gave me your time, your care, and your strength when I needed it the most. I'll never forget that."><p></p></div>
 
-              <div class="reveal-block">
-                <p>
-                  You know me better than anyone. I overthink, I worry, and I get scared about things. But you're different. You're brave, calm, and fearless in ways I truly admire. Whenever I lose confidence, you're the one who reminds me that we can face anything together. Because of you, I've become a better and stronger person.
-                </p>
-              </div>
+              <div class="reveal-block" data-text="You know me better than anyone. I overthink, I worry, and I get scared about things. But you're different. You're brave, calm, and fearless in ways I truly admire. Whenever I lose confidence, you're the one who reminds me that we can face anything together. Because of you, I've become a better and stronger person."><p></p></div>
 
-              <div class="reveal-block letter-quote">
-                "Thank you for loving me not only during the happy moments but also during the days when I wasn't at my best. That's the kind of love I'll always cherish."
-              </div>
+              <div class="reveal-block letter-quote" data-text='"Thank you for loving me not only during the happy moments but also during the days when I wasn\'t at my best. That\'s the kind of love I\'ll always cherish."'></div>
 
-              <div class="reveal-block letter-quote">
-                "This is the last birthday we'll celebrate before we become husband and wife, and that makes today even more special. I can't wait to spend the rest of my life with you, creating beautiful memories together."
-              </div>
+              <div class="reveal-block letter-quote" data-text='"This is the last birthday we\'ll celebrate before we become husband and wife, and that makes today even more special. I can\'t wait to spend the rest of my life with you, creating beautiful memories together."'></div>
 
-              <div class="reveal-block">
-                <p>
-                  I pray that this year brings you endless happiness, good health, success, and everything your heart wishes for. You deserve nothing but the best.
-                </p>
-              </div>
+              <div class="reveal-block" data-text="I pray that this year brings you endless happiness, good health, success, and everything your heart wishes for. You deserve nothing but the best."><p></p></div>
 
-              <div class="reveal-block letter-highlight-line">
-                <p>Happy Birthday, my future wife. ❤️</p>
-              </div>
+              <div class="reveal-block letter-highlight-line" data-text="Happy Birthday, my future wife. ❤️"><p></p></div>
 
-              <div class="reveal-block">
-                <p>I love you, today, tomorrow, and always.</p>
-              </div>
+              <div class="reveal-block" data-text="I love you, today, tomorrow, and always."><p></p></div>
             </div>
 
-            <!-- Heart Divider -->
             <div class="heart-divider">--- ♥ ---</div>
 
-            <!-- Signature Section -->
             <div class="signature-block" id="signatureBlock">
               <p class="sig-intro">With all my love,</p>
               <div class="sig-handwritten">Abhishek ❤️</div>
             </div>
 
-            <!-- Final Special Reveal Line -->
             <div class="final-wife-message" id="finalWifeMessage">
               <p class="wife-line-main">"The last birthday before I get to call you my wife."</p>
               <p class="forever-line">∞ Forever Begins Soon</p>
@@ -681,284 +612,469 @@
       </div>
     </div>
 
-    <!-- JavaScript & Sound Engine -->
     <script>
-      // Load Sequence: Black Overlay Fade & Auto-play Piano after 2s
-      window.addEventListener("DOMContentLoaded", () => {
-        const dateEl = document.getElementById("currentDateString");
-        if (dateEl) {
-          const options = { month: 'long', day: 'numeric', year: 'numeric' };
-          dateEl.textContent = new Date().toLocaleDateString('en-US', options);
+    // ─────────────────────────────────────────────
+    // 1. INIT & DATE
+    // ─────────────────────────────────────────────
+    window.addEventListener("DOMContentLoaded", () => {
+      const dateEl = document.getElementById("currentDateString");
+      if (dateEl) {
+        dateEl.textContent = new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+      }
+      // Fade in from black
+      setTimeout(() => {
+        const overlay = document.getElementById("blackOverlay");
+        if (overlay) overlay.style.opacity = "0";
+      }, 200);
+      // Piano starts after 2s
+      setTimeout(startPianoMelody, 2000);
+      // Shake hint after 4s of inactivity
+      startShakeHintTimer();
+    });
+
+    // ─────────────────────────────────────────────
+    // 2. SCROLL PROGRESS BAR
+    // ─────────────────────────────────────────────
+    window.addEventListener("scroll", () => {
+      const el = document.getElementById("scrollProgress");
+      if (!el) return;
+      const scrollTop  = window.scrollY || document.documentElement.scrollTop;
+      const docHeight  = document.documentElement.scrollHeight - window.innerHeight;
+      el.style.width   = docHeight > 0 ? (scrollTop / docHeight * 100) + "%" : "0%";
+    });
+
+    // ─────────────────────────────────────────────
+    // 3. PARTICLE CANVAS (dust + petals)
+    // ─────────────────────────────────────────────
+    const canvas = document.getElementById("particleCanvas");
+    const ctx    = canvas.getContext("2d");
+    let pW, pH;
+
+    function resizeCanvas() { pW = canvas.width = window.innerWidth; pH = canvas.height = window.innerHeight; }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * pW;
+        this.y = pH + Math.random() * 80;
+        this.isPetal = Math.random() < 0.35;
+        this.size   = this.isPetal ? (3 + Math.random() * 5) : (1 + Math.random() * 2.5);
+        this.speedY = 0.25 + Math.random() * 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.4;
+        this.rotation = Math.random() * Math.PI * 2;
+        this.rotSpeed = (Math.random() - 0.5) * 0.02;
+        this.alpha  = 0.15 + Math.random() * 0.45;
+      }
+      update() {
+        this.y -= this.speedY;
+        this.x += this.speedX + Math.sin(this.y * 0.02) * 0.3;
+        this.rotation += this.rotSpeed;
+        if (this.y < -20) this.reset();
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation);
+        if (this.isPetal) {
+          ctx.fillStyle = "rgba(205,120,100,0.45)";
+          ctx.beginPath();
+          ctx.ellipse(0, 0, this.size, this.size * 1.6, Math.PI / 4, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.fillStyle = "#f5efe6";
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = "#e0b096";
+          ctx.beginPath();
+          ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+          ctx.fill();
         }
+        ctx.restore();
+      }
+    }
 
-        // Fade in from black
-        setTimeout(() => {
-          const overlay = document.getElementById("blackOverlay");
-          if (overlay) overlay.style.opacity = "0";
-        }, 200);
+    const particles = Array.from({ length: 42 }, () => new Particle());
+    function animateParticles() {
+      ctx.clearRect(0, 0, pW, pH);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
 
-        // Soft piano starts after 2 seconds automatically
+    // ─────────────────────────────────────────────
+    // 4. CURSOR TRAIL (tiny hearts & sparkles)
+    // ─────────────────────────────────────────────
+    const cc = document.getElementById("cursorCanvas");
+    const cctx = cc.getContext("2d");
+    cc.width = window.innerWidth; cc.height = window.innerHeight;
+    window.addEventListener("resize", () => { cc.width = window.innerWidth; cc.height = window.innerHeight; });
+
+    const trailParticles = [];
+    const TRAIL_SYMBOLS = ["♥", "✦", "·", "♥", "✧"];
+
+    window.addEventListener("mousemove", (e) => {
+      if (Math.random() > 0.35) return;
+      trailParticles.push({
+        x: e.clientX,
+        y: e.clientY,
+        symbol: TRAIL_SYMBOLS[Math.floor(Math.random() * TRAIL_SYMBOLS.length)],
+        alpha: 0.85,
+        size: 8 + Math.random() * 8,
+        vy: -(0.5 + Math.random() * 1.2),
+        vx: (Math.random() - 0.5) * 0.8,
+        life: 1.0
+      });
+    });
+
+    function animateCursor() {
+      cctx.clearRect(0, 0, cc.width, cc.height);
+      for (let i = trailParticles.length - 1; i >= 0; i--) {
+        const p = trailParticles[i];
+        p.x += p.vx; p.y += p.vy; p.life -= 0.03; p.alpha = p.life * 0.85;
+        if (p.life <= 0) { trailParticles.splice(i, 1); continue; }
+        cctx.save();
+        cctx.globalAlpha = p.alpha;
+        cctx.fillStyle = "#b8733e";
+        cctx.font = `${p.size}px serif`;
+        cctx.textAlign = "center";
+        cctx.fillText(p.symbol, p.x, p.y);
+        cctx.restore();
+      }
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    // ─────────────────────────────────────────────
+    // 5. CONFETTI BURST
+    // ─────────────────────────────────────────────
+    const confCanvas = document.getElementById("confettiCanvas");
+    const confCtx    = confCanvas.getContext("2d");
+    confCanvas.width = window.innerWidth; confCanvas.height = window.innerHeight;
+    window.addEventListener("resize", () => { confCanvas.width = window.innerWidth; confCanvas.height = window.innerHeight; });
+
+    let confettiPieces = [];
+    let confettiActive = false;
+
+    function launchConfetti() {
+      confettiPieces = [];
+      confettiActive = true;
+      const SYMBOLS = ["♥", "❤", "✿", "❀", "·"];
+      const COLORS  = ["#b8733e","#e0b096","#d48070","#f5cfc6","#7a4625","#fce8e2"];
+      for (let i = 0; i < 90; i++) {
+        confettiPieces.push({
+          x: Math.random() * confCanvas.width,
+          y: -20 - Math.random() * 200,
+          symbol: SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)],
+          color:  COLORS[Math.floor(Math.random() * COLORS.length)],
+          size:   10 + Math.random() * 16,
+          vx:     (Math.random() - 0.5) * 3,
+          vy:     1.5 + Math.random() * 3,
+          rot:    Math.random() * 360,
+          rotV:   (Math.random() - 0.5) * 5,
+          alpha:  0.8 + Math.random() * 0.2
+        });
+      }
+      animateConfetti();
+    }
+
+    function animateConfetti() {
+      if (!confettiActive) return;
+      confCtx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+      let alive = false;
+      confettiPieces.forEach(p => {
+        p.x += p.vx; p.y += p.vy; p.rot += p.rotV; p.vy += 0.04;
+        if (p.y < confCanvas.height + 40) alive = true;
+        confCtx.save();
+        confCtx.globalAlpha = p.alpha;
+        confCtx.fillStyle = p.color;
+        confCtx.translate(p.x, p.y);
+        confCtx.rotate(p.rot * Math.PI / 180);
+        confCtx.font = `${p.size}px serif`;
+        confCtx.textAlign = "center";
+        confCtx.fillText(p.symbol, 0, 0);
+        confCtx.restore();
+      });
+      if (alive) requestAnimationFrame(animateConfetti);
+      else { confettiActive = false; confCtx.clearRect(0,0,confCanvas.width,confCanvas.height); }
+    }
+
+    // ─────────────────────────────────────────────
+    // 6. TAP RIPPLE ON ENVELOPE
+    // ─────────────────────────────────────────────
+    document.getElementById("envelopeWrapper").addEventListener("pointerdown", (e) => {
+      const wrapper = document.getElementById("envelopeWrapper");
+      const rect = wrapper.getBoundingClientRect();
+      const ripple = document.createElement("span");
+      ripple.className = "ripple";
+      const size = Math.max(rect.width, rect.height);
+      ripple.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px`;
+      wrapper.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 700);
+    });
+
+    // ─────────────────────────────────────────────
+    // 7. SHAKE HINT after 4s inactivity
+    // ─────────────────────────────────────────────
+    let shakeTimer = null;
+    function startShakeHintTimer() {
+      shakeTimer = setTimeout(() => {
+        const wrap = document.getElementById("envelopeWrapper");
+        if (wrap && !isOpened) {
+          wrap.classList.add("shake");
+          wrap.addEventListener("animationend", () => wrap.classList.remove("shake"), { once: true });
+          // repeat every 8s
+          shakeTimer = setTimeout(function repeat() {
+            if (!isOpened) {
+              wrap.classList.add("shake");
+              wrap.addEventListener("animationend", () => wrap.classList.remove("shake"), { once: true });
+              shakeTimer = setTimeout(repeat, 8000);
+            }
+          }, 8000);
+        }
+      }, 4000);
+    }
+
+    // ─────────────────────────────────────────────
+    // 8. WEB AUDIO — Paper rustle, piano + bass
+    // ─────────────────────────────────────────────
+    let audioCtx = null;
+    let isPlayingMusic = false;
+    let pianoTimeout = null;
+
+    function initAudioContext() {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AC();
+      }
+      if (audioCtx.state === "suspended") audioCtx.resume();
+    }
+
+    function playPaperSound() {
+      initAudioContext();
+      const bufferSize = audioCtx.sampleRate * 0.5;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = "bandpass"; filter.frequency.value = 1150; filter.Q.value = 1.4;
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.10, audioCtx.currentTime + 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
+      noise.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
+      noise.start();
+    }
+
+    // Richer piano: melody + bass chords
+    const noteFreq = {
+      "E3":164.81,"A3":220.00,"E4":329.63,"F#4":369.99,"G#4":415.30,
+      "A4":440.00,"B4":493.88,"C#5":554.37,"D5":587.33,"E5":659.25,
+      // bass
+      "A2":110.00,"E2":82.41,"C#3":138.59,"B2":123.47
+    };
+
+    // Melody motif (River Flows in You)
+    const melody = [
+      {n:"A4",d:0.35},{n:"G#4",d:0.35},{n:"A4",d:0.35},{n:"G#4",d:0.35},
+      {n:"A4",d:0.35},{n:"E4",d:0.7},{n:"A4",d:0.7},
+      {n:"A4",d:0.35},{n:"G#4",d:0.35},{n:"A4",d:0.35},{n:"G#4",d:0.35},
+      {n:"A4",d:0.35},{n:"E4",d:0.35},{n:"C#5",d:0.7},{n:"B4",d:0.7},
+      {n:"C#5",d:0.35},{n:"B4",d:0.35},{n:"C#5",d:0.35},{n:"B4",d:0.35},
+      {n:"C#5",d:0.35},{n:"G#4",d:0.7},{n:"A4",d:0.7},
+      {n:"B4",d:0.35},{n:"A4",d:0.35},{n:"G#4",d:0.35},{n:"F#4",d:0.7},
+      {n:"E4",d:1.2}
+    ];
+
+    // Bass chord pattern (every 1.4s cycle, one chord per measure of 4 melody notes)
+    const bassPattern = [
+      ["A2","E3","A3"],  // A minor
+      ["A2","E3","A3"],
+      ["E2","B2","E3"],  // E
+      ["C#3","G#3","C#4"] // C#m  — approximated
+    ];
+
+    function playNote(freq, duration, gainVal=0.06, type="triangle") {
+      if (!audioCtx || !isPlayingMusic) return;
+      const t = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const g   = audioCtx.createGain();
+      osc.type = type; osc.frequency.value = freq;
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(gainVal, t + 0.04);
+      g.gain.exponentialRampToValueAtTime(0.0006, t + duration);
+      osc.connect(g); g.connect(audioCtx.destination);
+      osc.start(t); osc.stop(t + duration);
+    }
+
+    function playBassChord(chordNotes) {
+      if (!audioCtx || !isPlayingMusic) return;
+      chordNotes.forEach(n => {
+        const freq = noteFreq[n];
+        if (freq) playNote(freq, 2.2, 0.028, "sine");
+      });
+    }
+
+    let melodyIdx = 0;
+    let bassIdx   = 0;
+    let beatCount = 0;
+
+    function startPianoMelody() {
+      if (isPlayingMusic) return;
+      initAudioContext();
+      isPlayingMusic = true;
+      document.getElementById("musicWidget").classList.add("visible");
+      document.getElementById("musicBtnText").textContent = "Pause Music";
+
+      function stepMelody() {
+        if (!isPlayingMusic) return;
+        const cur = melody[melodyIdx];
+        const freq = noteFreq[cur.n];
+        if (freq) playNote(freq, cur.d * 3, 0.06, "triangle");
+
+        // play bass chord every 4 melody steps
+        if (beatCount % 4 === 0) {
+          playBassChord(bassPattern[bassIdx % bassPattern.length]);
+          bassIdx++;
+        }
+        beatCount++;
+        melodyIdx = (melodyIdx + 1) % melody.length;
+        pianoTimeout = setTimeout(stepMelody, cur.d * 720);
+      }
+      stepMelody();
+    }
+
+    function toggleMusic() {
+      const btnText = document.getElementById("musicBtnText");
+      if (isPlayingMusic) {
+        isPlayingMusic = false;
+        if (pianoTimeout) clearTimeout(pianoTimeout);
+        btnText.textContent = "Play Music";
+      } else {
+        startPianoMelody();
+      }
+    }
+
+    // ─────────────────────────────────────────────
+    // 9. ENVELOPE OPEN LOGIC
+    // ─────────────────────────────────────────────
+    let isOpened = false;
+
+    function openLoveLetter() {
+      if (isOpened) return;
+      isOpened = true;
+      clearTimeout(shakeTimer);
+
+      const envelope = document.getElementById("envelopeWrapper");
+      const hint     = document.getElementById("openHint");
+      const letter   = document.getElementById("letterContainer");
+      const viewport = document.getElementById("appViewport");
+
+      playPaperSound();
+      envelope.classList.add("is-open");
+      document.body.classList.add("letter-active");
+      if (viewport) viewport.classList.add("zoom-in");
+
+      // Confetti burst
+      setTimeout(launchConfetti, 300);
+
+      setTimeout(() => {
+        envelope.style.opacity   = "0";
+        envelope.style.transform = "scale(0.85) translateY(-30px)";
+        if (hint) hint.style.opacity = "0";
+      }, 650);
+
+      setTimeout(() => {
+        envelope.style.display = "none";
+        if (hint) hint.style.display = "none";
+        letter.classList.add("visible");
+        requestAnimationFrame(() => {
+          letter.classList.add("unfolded");
+          revealLetterContentSequentially();
+        });
+      }, 1200);
+    }
+
+    // ─────────────────────────────────────────────
+    // 10. TYPEWRITER PARAGRAPH REVEAL
+    // ─────────────────────────────────────────────
+    function typewriterInto(container, text, onDone) {
+      // For quote blocks, write directly; for p-containers, write into the <p>
+      const target = container.querySelector("p") || container;
+      target.textContent = "";
+      // add blinking cursor
+      const cursor = document.createElement("span");
+      cursor.className = "tw-cursor";
+      target.appendChild(cursor);
+
+      let i = 0;
+      const speed = 18; // ms per char
+
+      function type() {
+        if (i < text.length) {
+          target.insertBefore(document.createTextNode(text[i]), cursor);
+          i++;
+          // play subtle page-turn sound every ~80 chars
+          if (i % 80 === 0) playPageTurnSound();
+          setTimeout(type, speed);
+        } else {
+          cursor.remove();
+          if (onDone) onDone();
+        }
+      }
+      type();
+    }
+
+    function playPageTurnSound() {
+      initAudioContext();
+      const bufferSize = Math.floor(audioCtx.sampleRate * 0.18);
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * (1 - i/bufferSize);
+      const src = audioCtx.createBufferSource();
+      src.buffer = buffer;
+      const filt = audioCtx.createBiquadFilter();
+      filt.type = "highpass"; filt.frequency.value = 2000;
+      const g = audioCtx.createGain();
+      g.gain.setValueAtTime(0.04, audioCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
+      src.connect(filt); filt.connect(g); g.connect(audioCtx.destination);
+      src.start();
+    }
+
+    function revealLetterContentSequentially() {
+      const blocks = Array.from(document.querySelectorAll(".reveal-block"));
+      let delay = 300;
+
+      blocks.forEach((block, idx) => {
+        const rawText = block.getAttribute("data-text") || "";
+        // Estimate typewriter duration so next block waits appropriately
+        const twDuration = rawText.length * 18 + 400;
+
         setTimeout(() => {
-          startPianoMelody();
-        }, 2000);
+          block.classList.add("shown");
+          playPageTurnSound();
+          typewriterInto(block, rawText);
+        }, delay);
+
+        delay += Math.max(twDuration, 1400);
       });
 
-      /* --- Particle Canvas: Floating Light Dust & Subtle Rose Petals --- */
-      const canvas = document.getElementById("particleCanvas");
-      const ctx = canvas.getContext("2d");
-      let width, height;
+      const sigDelay = delay + 600;
+      setTimeout(() => {
+        const sig = document.getElementById("signatureBlock");
+        if (sig) sig.classList.add("shown");
+      }, sigDelay);
 
-      function resizeCanvas() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-      }
-      window.addEventListener("resize", resizeCanvas);
-      resizeCanvas();
-
-      class Particle {
-        constructor() {
-          this.reset();
-        }
-
-        reset() {
-          this.x = Math.random() * width;
-          this.y = height + Math.random() * 80;
-          this.isPetal = Math.random() < 0.35; // 35% floating rose petals
-          this.size = this.isPetal ? (3 + Math.random() * 5) : (1 + Math.random() * 2.5);
-          this.speedY = 0.25 + Math.random() * 0.5;
-          this.speedX = (Math.random() - 0.5) * 0.4;
-          this.rotation = Math.random() * Math.PI * 2;
-          this.rotSpeed = (Math.random() - 0.5) * 0.02;
-          this.alpha = 0.15 + Math.random() * 0.45;
-        }
-
-        update() {
-          this.y -= this.speedY;
-          this.x += this.speedX + Math.sin(this.y * 0.02) * 0.3;
-          this.rotation += this.rotSpeed;
-          if (this.y < -20) this.reset();
-        }
-
-        draw() {
-          ctx.save();
-          ctx.globalAlpha = this.alpha;
-          ctx.translate(this.x, this.y);
-          ctx.rotate(this.rotation);
-
-          if (this.isPetal) {
-            // Draw subtle rose petal ellipse shape
-            ctx.fillStyle = "rgba(205, 120, 100, 0.45)";
-            ctx.beginPath();
-            ctx.ellipse(0, 0, this.size, this.size * 1.6, Math.PI / 4, 0, Math.PI * 2);
-            ctx.fill();
-          } else {
-            // Draw glowing light dust particle
-            ctx.fillStyle = "#f5efe6";
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = "#e0b096";
-            ctx.beginPath();
-            ctx.arc(0, 0, this.size, 0, Math.PI * 2);
-            ctx.fill();
-          }
-          ctx.restore();
-        }
-      }
-
-      const particles = Array.from({ length: 42 }, () => new Particle());
-
-      function animateParticles() {
-        ctx.clearRect(0, 0, width, height);
-        particles.forEach((p) => {
-          p.update();
-          p.draw();
-        });
-        requestAnimationFrame(animateParticles);
-      }
-      animateParticles();
-
-      /* --- Web Audio API: Soft Paper Rustle & Yiruma Melody Synth --- */
-      let audioCtx = null;
-      let isPlayingMusic = false;
-      let pianoTimeout = null;
-
-      function initAudioContext() {
-        if (!audioCtx) {
-          const AudioContext = window.AudioContext || window.webkitAudioContext;
-          audioCtx = new AudioContext();
-        }
-        if (audioCtx.state === "suspended") {
-          audioCtx.resume();
-        }
-      }
-
-      function playPaperSound() {
-        initAudioContext();
-        const bufferSize = audioCtx.sampleRate * 0.5;
-        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = Math.random() * 2 - 1;
-        }
-
-        const noise = audioCtx.createBufferSource();
-        noise.buffer = buffer;
-
-        const filter = audioCtx.createBiquadFilter();
-        filter.type = "bandpass";
-        filter.frequency.value = 1150;
-        filter.Q.value = 1.4;
-
-        const gain = audioCtx.createGain();
-        gain.gain.setValueAtTime(0, audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.12, audioCtx.currentTime + 0.08);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
-
-        noise.connect(filter);
-        filter.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        noise.start();
-      }
-
-      // Yiruma - River Flows in You Melody
-      const noteFrequencies = {
-        "E4": 329.63, "F#4": 369.99, "G#4": 415.30, "A4": 440.00,
-        "B4": 493.88, "C#5": 554.37, "D5": 587.33, "E5": 659.25
-      };
-
-      const riverFlowsMotif = [
-        { note: "A4", dur: 0.35 }, { note: "G#4", dur: 0.35 }, { note: "A4", dur: 0.35 }, { note: "G#4", dur: 0.35 },
-        { note: "A4", dur: 0.35 }, { note: "E4", dur: 0.7 },  { note: "A4", dur: 0.7 },
-        { note: "A4", dur: 0.35 }, { note: "G#4", dur: 0.35 }, { note: "A4", dur: 0.35 }, { note: "G#4", dur: 0.35 },
-        { note: "A4", dur: 0.35 }, { note: "E4", dur: 0.35 }, { note: "C#5", dur: 0.7 }, { note: "B4", dur: 0.7 },
-        { note: "C#5", dur: 0.35 }, { note: "B4", dur: 0.35 }, { note: "C#5", dur: 0.35 }, { note: "B4", dur: 0.35 },
-        { note: "C#5", dur: 0.35 }, { note: "G#4", dur: 0.7 }, { note: "A4", dur: 0.7 },
-        { note: "B4", dur: 0.35 }, { note: "A4", dur: 0.35 }, { note: "G#4", dur: 0.35 }, { note: "F#4", dur: 0.7 },
-        { note: "E4", dur: 1.2 }
-      ];
-
-      function playPianoKey(freq, duration = 1.8) {
-        if (!audioCtx || !isPlayingMusic) return;
-        const start = audioCtx.currentTime;
-
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-
-        osc.type = "triangle";
-        osc.frequency.value = freq;
-
-        gain.gain.setValueAtTime(0, start);
-        gain.gain.linearRampToValueAtTime(0.06, start + 0.04);
-        gain.gain.exponentialRampToValueAtTime(0.0006, start + duration);
-
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-
-        osc.start(start);
-        osc.stop(start + duration);
-      }
-
-      function startPianoMelody() {
-        if (isPlayingMusic) return;
-        initAudioContext();
-        isPlayingMusic = true;
-        document.getElementById("musicWidget").classList.add("visible");
-        document.getElementById("musicBtnText").textContent = "Pause Music";
-
-        let noteIdx = 0;
-
-        function stepMelody() {
-          if (!isPlayingMusic) return;
-          const current = riverFlowsMotif[noteIdx];
-          const freq = noteFrequencies[current.note];
-          if (freq) {
-            playPianoKey(freq, current.dur * 3);
-          }
-          noteIdx = (noteIdx + 1) % riverFlowsMotif.length;
-          const nextDelay = current.dur * 720;
-          pianoTimeout = setTimeout(stepMelody, nextDelay);
-        }
-
-        stepMelody();
-      }
-
-      function toggleMusic() {
-        const btnText = document.getElementById("musicBtnText");
-        if (isPlayingMusic) {
-          isPlayingMusic = false;
-          if (pianoTimeout) clearTimeout(pianoTimeout);
-          btnText.textContent = "Play Music";
-        } else {
-          startPianoMelody();
-        }
-      }
-
-      /* --- Interactive Envelope Unfold & Sequential Paragraph Reveal --- */
-      let isOpened = false;
-
-      function openLoveLetter() {
-        if (isOpened) return;
-        isOpened = true;
-
-        const envelope = document.getElementById("envelopeWrapper");
-        const hint = document.getElementById("openHint");
-        const letter = document.getElementById("letterContainer");
-        const viewport = document.getElementById("appViewport");
-
-        // 1. Play paper rustle sound
-        playPaperSound();
-
-        // 2. Open envelope flap & zoom viewport slightly
-        envelope.classList.add("is-open");
-        document.body.classList.add("letter-active");
-        if (viewport) viewport.classList.add("zoom-in");
-
-        // 3. Fade out envelope
-        setTimeout(() => {
-          envelope.style.opacity = "0";
-          envelope.style.transform = "scale(0.85) translateY(-30px)";
-          if (hint) hint.style.opacity = "0";
-        }, 650);
-
-        // 4. Reveal full-page letter stationery & start sequential paragraph reveal
-        setTimeout(() => {
-          envelope.style.display = "none";
-          if (hint) hint.style.display = "none";
-
-          letter.classList.add("visible");
-          requestAnimationFrame(() => {
-            letter.classList.add("unfolded");
-            revealLetterContentSequentially();
-          });
-        }, 1200);
-      }
-
-      // Sequential Typewriter/Fade Paragraph Reveal Logic
-      function revealLetterContentSequentially() {
-        const blocks = document.querySelectorAll(".reveal-block");
-        let delay = 300;
-
-        blocks.forEach((block, index) => {
-          setTimeout(() => {
-            block.classList.add("shown");
-          }, delay);
-          delay += 1600; // 1.6s between paragraphs
-        });
-
-        // Reveal signature after all paragraphs are shown
-        const signatureDelay = delay + 600;
-        setTimeout(() => {
-          const sig = document.getElementById("signatureBlock");
-          if (sig) sig.classList.add("shown");
-        }, signatureDelay);
-
-        // 3 seconds after signature, reveal final wife message
-        const finalDelay = signatureDelay + 3000;
-        setTimeout(() => {
-          const finalMsg = document.getElementById("finalWifeMessage");
-          if (finalMsg) finalMsg.classList.add("shown");
-        }, finalDelay);
-      }
+      setTimeout(() => {
+        const finalMsg = document.getElementById("finalWifeMessage");
+        if (finalMsg) finalMsg.classList.add("shown");
+      }, sigDelay + 3000);
+    }
     </script>
   </body>
 </html>
