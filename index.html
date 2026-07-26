@@ -983,22 +983,6 @@
       type();
     }
 
-    function playPageTurnSound() {
-      initAudioContext();
-      const bufferSize = Math.floor(audioCtx.sampleRate * 0.18);
-      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * (1 - i/bufferSize);
-      const src = audioCtx.createBufferSource();
-      src.buffer = buffer;
-      const filt = audioCtx.createBiquadFilter();
-      filt.type = "highpass"; filt.frequency.value = 2000;
-      const g = audioCtx.createGain();
-      g.gain.setValueAtTime(0.04, audioCtx.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
-      src.connect(filt); filt.connect(g); g.connect(audioCtx.destination);
-      src.start();
-    }
 
     function revealLetterContentSequentially() {
       const blocks = Array.from(document.querySelectorAll(".reveal-block"));
