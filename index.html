@@ -3,17 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Happy Birthday, My Love ❤️ | A Private Love Letter</title>
+    <title>Happy Birthday, My Love ❤️ | A Love Letter</title>
     <meta
       name="description"
-      content="A luxury handwritten love letter experience created with love."
+      content="A cinematic, luxury handwritten love letter experience."
     />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Great+Vibes&family=Parisienne&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Great+Vibes&family=Parisienne&display=swap"
       rel="stylesheet"
     />
 
@@ -23,14 +23,12 @@
         --bg-cream-soft: #f6f0ea;
         --bg-cream-dark: #eae0d5;
         --paper-bg: #faf6f0;
-        --paper-border: #ebdcd0;
         --rose-gold: #b8733e;
         --rose-gold-light: #e0b096;
         --rose-gold-dark: #7a4625;
         --text-dark: #2c2a29;
         --text-muted: #6b635e;
-        --font-badge: 'Great Vibes', cursive;
-        --font-title: 'Playfair Display', serif;
+        --font-title: 'Great Vibes', cursive;
         --font-body: 'Cormorant Garamond', serif;
         --font-sig: 'Parisienne', cursive;
       }
@@ -52,22 +50,32 @@
         -webkit-font-smoothing: antialiased;
       }
 
-      /* Corner ambient lighting glow */
+      /* Initial Fade from Black Overlay */
+      #blackOverlay {
+        position: fixed;
+        inset: 0;
+        background: #080608;
+        z-index: 1000;
+        pointer-events: none;
+        transition: opacity 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      /* Ambient Lighting Glows */
       .ambient-glow {
         position: fixed;
-        width: 450px;
-        height: 450px;
+        width: 500px;
+        height: 500px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(224, 176, 150, 0.25) 0%, rgba(253, 251, 247, 0) 70%);
-        filter: blur(60px);
+        background: radial-gradient(circle, rgba(224, 176, 150, 0.22) 0%, rgba(253, 251, 247, 0) 70%);
+        filter: blur(70px);
         pointer-events: none;
         z-index: 0;
       }
 
-      .glow-top-left { top: -100px; left: -100px; }
-      .glow-bottom-right { bottom: -100px; right: -100px; }
+      .glow-top { top: -120px; left: 50%; transform: translateX(-50%); }
+      .glow-bottom { bottom: -120px; right: -80px; }
 
-      /* Floating Light Particles Canvas */
+      /* Particle Canvas (Dust & Rose Petals) */
       #particleCanvas {
         position: fixed;
         inset: 0;
@@ -75,14 +83,14 @@
         height: 100%;
         pointer-events: none;
         z-index: 1;
-        transition: filter 1s ease;
+        transition: filter 1.2s ease;
       }
 
-      body.letter-open #particleCanvas {
-        filter: blur(3px);
+      body.letter-active #particleCanvas {
+        filter: blur(2px);
       }
 
-      /* App Container Layout */
+      /* Main Viewport Container */
       .app-viewport {
         position: relative;
         z-index: 5;
@@ -92,9 +100,14 @@
         align-items: center;
         justify-content: center;
         padding: 40px 18px 80px;
+        transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
-      /* Floating Music Controller Widget */
+      .app-viewport.zoom-in {
+        transform: scale(1.03);
+      }
+
+      /* Floating Music Widget */
       .music-widget {
         position: fixed;
         top: 24px;
@@ -150,24 +163,25 @@
         50% { transform: scale(1.3); opacity: 1; }
       }
 
-      /* ENVELOPE STAGE */
+      /* Stage Wrapper */
       .stage-wrapper {
         width: 100%;
-        max-width: 760px;
+        max-width: 720px;
         perspective: 1200px;
         display: flex;
         flex-direction: column;
         align-items: center;
       }
 
+      /* ENVELOPE DESIGN */
       .envelope-wrapper {
         position: relative;
         width: 100%;
-        max-width: 500px;
-        height: 330px;
+        max-width: 490px;
+        height: 320px;
         cursor: pointer;
         animation: floatEnvelope 6s ease-in-out infinite;
-        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
+        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
       }
 
       @keyframes floatEnvelope {
@@ -186,7 +200,7 @@
         height: 100%;
         background: linear-gradient(145deg, #f4eae1 0%, #eae0d5 100%);
         border-radius: 16px;
-        box-shadow: 0 25px 60px rgba(184, 115, 62, 0.18), 0 10px 25px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 25px 60px rgba(184, 115, 62, 0.18), 0 10px 25px rgba(0, 0, 0, 0.04);
         border: 1px solid rgba(255, 255, 255, 0.8);
         transform-style: preserve-3d;
       }
@@ -197,7 +211,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 175px;
+        height: 170px;
         background: linear-gradient(180deg, #f8efe6 0%, #e6dace 100%);
         clip-path: polygon(0 0, 50% 100%, 100% 0);
         transform-origin: top center;
@@ -205,7 +219,6 @@
         z-index: 5;
         border-top-left-radius: 16px;
         border-top-right-radius: 16px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
       }
 
       .envelope-wrapper.is-open .envelope-flap {
@@ -219,7 +232,7 @@
         bottom: 0;
         left: 0;
         width: 100%;
-        height: 185px;
+        height: 180px;
         background: linear-gradient(0deg, #e3d7cb 0%, #eddcd0 100%);
         clip-path: polygon(0 100%, 50% 36%, 100% 100%);
         z-index: 4;
@@ -230,11 +243,11 @@
       /* Rose-Gold Wax Seal */
       .wax-seal {
         position: absolute;
-        top: 150px;
+        top: 148px;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 86px;
-        height: 86px;
+        width: 90px;
+        height: 90px;
         background: radial-gradient(circle at 35% 35%, #d8966c 0%, #b8733e 65%, #8a4d22 100%);
         border-radius: 50%;
         display: flex;
@@ -258,10 +271,13 @@
         font-family: var(--font-body);
         font-size: 0.62rem;
         font-weight: 600;
-        letter-spacing: 0.1em;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
         color: #fffaf5;
         text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        text-align: center;
+        padding: 0 6px;
+        line-height: 1.2;
       }
 
       .envelope-wrapper.is-open .wax-seal {
@@ -292,15 +308,15 @@
         display: inline-block;
       }
 
-      /* ELEGANT LUXURY LETTER PAPER */
+      /* EXPENSIVE STATIONERY LETTER PAPER */
       .letter-container {
         position: relative;
         width: 100%;
-        max-width: 760px;
+        max-width: 710px;
         display: none;
         opacity: 0;
         transform: translateY(40px) scale(0.97);
-        transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1), transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
         z-index: 10;
       }
 
@@ -316,43 +332,50 @@
       .letter-paper {
         background: linear-gradient(175deg, #fdfbf7 0%, #faf6f0 100%);
         border-radius: 16px;
-        padding: 76px 64px 64px;
-        box-shadow: 0 30px 80px rgba(184, 115, 62, 0.12), 0 10px 30px rgba(0, 0, 0, 0.04);
+        padding: 76px 60px 64px;
+        box-shadow: 0 30px 80px rgba(184, 115, 62, 0.14), 0 10px 30px rgba(0, 0, 0, 0.04);
         border: 1px solid #ebdcd0;
         position: relative;
       }
 
+      /* Thin Inner Gold Border */
       .letter-paper::before {
         content: '';
         position: absolute;
         inset: 18px;
-        border: 1px solid rgba(184, 115, 62, 0.2);
+        border: 1px solid rgba(184, 115, 62, 0.28);
         border-radius: 10px;
         pointer-events: none;
       }
 
-      /* Top Badge Script */
-      .letter-top-badge {
-        font-family: var(--font-badge);
-        font-size: 1.8rem;
+      /* Filigree Corner Vectors */
+      .floral-corner {
+        position: absolute;
+        width: 60px;
+        height: 60px;
         color: var(--rose-gold);
-        text-align: center;
-        margin-bottom: 8px;
+        opacity: 0.4;
+        pointer-events: none;
       }
+
+      .floral-tl { top: 24px; left: 24px; }
+      .floral-tr { top: 24px; right: 24px; transform: scaleX(-1); }
+      .floral-bl { bottom: 24px; left: 24px; transform: scaleY(-1); }
+      .floral-br { bottom: 24px; right: 24px; transform: scale(-1); }
 
       /* Letter Title & Date */
       .letter-header {
         text-align: center;
-        margin-bottom: 36px;
+        margin-bottom: 40px;
       }
 
       .letter-title {
         font-family: var(--font-title);
-        font-size: clamp(2.4rem, 5vw, 3.6rem);
-        color: var(--text-dark);
-        font-weight: 500;
-        line-height: 1.25;
-        letter-spacing: -0.01em;
+        font-size: clamp(3.2rem, 7.5vw, 4.8rem);
+        color: var(--rose-gold-dark);
+        font-weight: 400;
+        line-height: 1.15;
+        text-shadow: 0 2px 10px rgba(184, 115, 62, 0.12);
       }
 
       .letter-date {
@@ -371,18 +394,26 @@
         margin: 20px auto 0;
       }
 
-      /* Letter Body Typography */
+      /* Letter Body & Paragraph Animation */
       .letter-body {
         font-family: var(--font-body);
-        font-size: 1.28rem;
-        line-height: 2.0;
+        font-size: 1.3rem;
+        line-height: 2.05;
         color: var(--text-dark);
         font-weight: 400;
       }
 
-      .letter-body p {
+      .reveal-block {
+        opacity: 0;
+        transform: translateY(18px);
+        transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         margin-bottom: 24px;
         text-align: justify;
+      }
+
+      .reveal-block.shown {
+        opacity: 1;
+        transform: translateY(0);
       }
 
       .letter-quote {
@@ -391,7 +422,7 @@
         padding: 18px 26px;
         margin: 32px 0;
         font-style: italic;
-        font-size: 1.26rem;
+        font-size: 1.28rem;
         color: var(--rose-gold-dark);
         border-radius: 0 10px 10px 0;
         line-height: 1.9;
@@ -402,11 +433,28 @@
         color: var(--rose-gold-dark);
       }
 
+      /* Heart Divider before Signature */
+      .heart-divider {
+        text-align: center;
+        margin: 40px 0 30px;
+        color: var(--rose-gold);
+        font-size: 1.2rem;
+        letter-spacing: 12px;
+        opacity: 0.6;
+      }
+
       /* Signature Section */
-      .letter-signature-block {
-        margin-top: 56px;
+      .signature-block {
         text-align: right;
-        padding-right: 12px;
+        margin-top: 40px;
+        opacity: 0;
+        transform: translateY(15px);
+        transition: opacity 1.5s ease, transform 1.5s ease;
+      }
+
+      .signature-block.shown {
+        opacity: 1;
+        transform: translateY(0);
       }
 
       .sig-intro {
@@ -427,31 +475,46 @@
         gap: 8px;
       }
 
-      .beating-heart {
-        display: inline-block;
-        animation: heartPulse 2.4s infinite ease-in-out;
-        font-size: 2.2rem;
-      }
-
-      @keyframes heartPulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.18); }
-      }
-
-      /* Luxury Footer */
-      .letter-footer {
-        margin-top: 50px;
+      /* Final Centered Reveal Message */
+      .final-wife-message {
+        margin-top: 60px;
         text-align: center;
-        font-family: var(--font-body);
-        font-size: 0.95rem;
-        color: var(--text-muted);
-        letter-spacing: 0.08em;
+        padding: 30px 20px;
+        background: rgba(184, 115, 62, 0.05);
+        border-radius: 12px;
+        border: 1px solid rgba(184, 115, 62, 0.2);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 2s cubic-bezier(0.16, 1, 0.3, 1), transform 2s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
-      /* Mobile Responsive Tweaks */
+      .final-wife-message.shown {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .wife-line-main {
+        font-family: var(--font-body);
+        font-size: 1.45rem;
+        font-style: italic;
+        color: var(--rose-gold-dark);
+        font-weight: 500;
+        line-height: 1.6;
+        margin-bottom: 12px;
+      }
+
+      .forever-line {
+        font-family: var(--font-body);
+        font-size: 1.05rem;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      /* Mobile Tweaks */
       @media (max-width: 680px) {
         .letter-paper {
-          padding: 50px 28px 44px;
+          padding: 52px 26px 44px;
         }
 
         .letter-paper::before {
@@ -468,16 +531,16 @@
 
         .wax-seal {
           top: 135px;
-          width: 76px;
-          height: 76px;
+          width: 80px;
+          height: 80px;
         }
 
         .letter-body {
-          font-size: 1.14rem;
+          font-size: 1.16rem;
           line-height: 1.85;
         }
 
-        .letter-body p {
+        .reveal-block {
           text-align: left;
         }
 
@@ -488,14 +551,17 @@
     </style>
   </head>
   <body>
-    <!-- Soft Corner Ambient Light Glows -->
-    <div class="ambient-glow glow-top-left"></div>
-    <div class="ambient-glow glow-bottom-right"></div>
+    <!-- Initial Black Overlay for Fade-In -->
+    <div id="blackOverlay"></div>
 
-    <!-- Soft Light Particles Canvas -->
+    <!-- Soft Ambient Light Glows -->
+    <div class="ambient-glow glow-top"></div>
+    <div class="ambient-glow glow-bottom"></div>
+
+    <!-- Particle Canvas for Light Dust & Subtle Rose Petals -->
     <canvas id="particleCanvas"></canvas>
 
-    <!-- Floating Music Controls -->
+    <!-- Floating Music Controls Widget -->
     <div class="music-widget" id="musicWidget">
       <button class="music-btn" id="musicToggleBtn" onclick="toggleMusic()">
         <span class="music-pulse"></span>
@@ -503,11 +569,11 @@
       </button>
     </div>
 
-    <!-- Main App Container -->
-    <div class="app-viewport">
+    <!-- Main Viewport -->
+    <div class="app-viewport" id="appViewport">
       <div class="stage-wrapper">
 
-        <!-- Envelope Container -->
+        <!-- Handcrafted Envelope -->
         <div class="envelope-wrapper" id="envelopeWrapper" onclick="openLoveLetter()">
           <div class="envelope">
             <div class="envelope-flap"></div>
@@ -515,69 +581,94 @@
 
             <div class="wax-seal">
               <span class="wax-seal-heart">❤️</span>
-              <span class="wax-seal-text">To My Love</span>
+              <span class="wax-seal-text">For Someone Very Special</span>
             </div>
           </div>
         </div>
 
         <div class="open-hint" id="openHint">
-          <span class="open-time">Open at 12:00 AM ✨</span>
+          <span class="open-time">Open Me ✨</span>
         </div>
 
-        <!-- Full-Page Luxury Love Letter -->
+        <!-- Expensive Stationery Love Letter -->
         <div class="letter-container" id="letterContainer">
           <div class="letter-paper">
 
-            <div class="letter-top-badge">A Birthday Note</div>
+            <!-- Floral Corner Ornaments -->
+            <svg class="floral-corner floral-tl" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20" />
+              <circle cx="25" cy="25" r="3.5" fill="currentColor" />
+            </svg>
+            <svg class="floral-corner floral-tr" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20" />
+              <circle cx="25" cy="25" r="3.5" fill="currentColor" />
+            </svg>
+            <svg class="floral-corner floral-bl" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20" />
+              <circle cx="25" cy="25" r="3.5" fill="currentColor" />
+            </svg>
+            <svg class="floral-corner floral-br" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20" />
+              <circle cx="25" cy="25" r="3.5" fill="currentColor" />
+            </svg>
 
+            <!-- Letter Title & Date -->
             <div class="letter-header">
-              <h1 class="letter-title">Happy Birthday, My Love ❤️</h1>
+              <h1 class="letter-title">Happy Birthday,<br />My Love ❤️</h1>
               <p class="letter-date" id="currentDateString">July 26, 2026</p>
               <div class="letter-divider"></div>
             </div>
 
-            <!-- Letter Body -->
+            <!-- Letter Content (Sequential Reveal Blocks) -->
             <div class="letter-body">
-              <p>
-                There are so many reasons why I'm grateful for you, but one memory will always stay with me. During one of the hardest phases of my life, when I felt lost, stressed, and didn't know how to move forward, you never gave up on me. You stood beside me, gave me your time, your care, and your strength when I needed it the most. I'll never forget that.
-              </p>
+              <div class="reveal-block">
+                <p>
+                  There are so many reasons why I'm grateful for you, but one memory will always stay with me. During one of the hardest phases of my life, when I felt lost, stressed, and didn't know how to move forward, you never gave up on me. You stood beside me, gave me your time, your care, and your strength when I needed it the most. I'll never forget that.
+                </p>
+              </div>
 
-              <p>
-                You know me better than anyone. I overthink, I worry, and I get scared about things. But you're different. You're brave, calm, and fearless in ways I truly admire. Whenever I lose confidence, you're the one who reminds me that we can face anything together. Because of you, I've become a better and stronger person.
-              </p>
+              <div class="reveal-block">
+                <p>
+                  You know me better than anyone. I overthink, I worry, and I get scared about things. But you're different. You're brave, calm, and fearless in ways I truly admire. Whenever I lose confidence, you're the one who reminds me that we can face anything together. Because of you, I've become a better and stronger person.
+                </p>
+              </div>
 
-              <div class="letter-quote">
+              <div class="reveal-block letter-quote">
                 "Thank you for loving me not only during the happy moments but also during the days when I wasn't at my best. That's the kind of love I'll always cherish."
               </div>
 
-              <div class="letter-quote">
+              <div class="reveal-block letter-quote">
                 "This is the last birthday we'll celebrate before we become husband and wife, and that makes today even more special. I can't wait to spend the rest of my life with you, creating beautiful memories together."
               </div>
 
-              <p>
-                I pray that this year brings you endless happiness, good health, success, and everything your heart wishes for. You deserve nothing but the best.
-              </p>
+              <div class="reveal-block">
+                <p>
+                  I pray that this year brings you endless happiness, good health, success, and everything your heart wishes for. You deserve nothing but the best.
+                </p>
+              </div>
 
-              <p class="letter-highlight-line">
-                Happy Birthday, my future wife. ❤️
-              </p>
+              <div class="reveal-block letter-highlight-line">
+                <p>Happy Birthday, my future wife. ❤️</p>
+              </div>
 
-              <p>
-                I love you, today, tomorrow, and always.
-              </p>
-            </div>
-
-            <!-- Signature Section -->
-            <div class="letter-signature-block">
-              <p class="sig-intro">With all my love,</p>
-              <div class="sig-handwritten">
-                Abhishek <span class="beating-heart">❤️</span>
+              <div class="reveal-block">
+                <p>I love you, today, tomorrow, and always.</p>
               </div>
             </div>
 
-            <!-- Footer -->
-            <div class="letter-footer">
-              Made with ❤️ by Abhishek
+            <!-- Heart Divider -->
+            <div class="heart-divider">--- ♥ ---</div>
+
+            <!-- Signature Section -->
+            <div class="signature-block" id="signatureBlock">
+              <p class="sig-intro">With all my love,</p>
+              <div class="sig-handwritten">Abhishek ❤️</div>
+            </div>
+
+            <!-- Final Special Reveal Line -->
+            <div class="final-wife-message" id="finalWifeMessage">
+              <p class="wife-line-main">"The last birthday before I get to call you my wife."</p>
+              <p class="forever-line">∞ Forever Begins Soon</p>
             </div>
 
           </div>
@@ -586,18 +677,29 @@
       </div>
     </div>
 
-    <!-- JavaScript Engine -->
+    <!-- JavaScript & Sound Engine -->
     <script>
-      // Display Today's Date Elegantly
-      document.addEventListener("DOMContentLoaded", () => {
+      // Load Sequence: Black Overlay Fade & Auto-play Piano after 2s
+      window.addEventListener("DOMContentLoaded", () => {
         const dateEl = document.getElementById("currentDateString");
         if (dateEl) {
           const options = { month: 'long', day: 'numeric', year: 'numeric' };
           dateEl.textContent = new Date().toLocaleDateString('en-US', options);
         }
+
+        // Fade in from black
+        setTimeout(() => {
+          const overlay = document.getElementById("blackOverlay");
+          if (overlay) overlay.style.opacity = "0";
+        }, 200);
+
+        // Soft piano starts after 2 seconds automatically
+        setTimeout(() => {
+          startPianoMelody();
+        }, 2000);
       });
 
-      /* --- Soft Light Particles Canvas --- */
+      /* --- Particle Canvas: Floating Light Dust & Subtle Rose Petals --- */
       const canvas = document.getElementById("particleCanvas");
       const ctx = canvas.getContext("2d");
       let width, height;
@@ -609,44 +711,60 @@
       window.addEventListener("resize", resizeCanvas);
       resizeCanvas();
 
-      class LightParticle {
+      class Particle {
         constructor() {
           this.reset();
         }
 
         reset() {
           this.x = Math.random() * width;
-          this.y = height + Math.random() * 60;
-          this.radius = 1 + Math.random() * 2.5;
-          this.speedY = 0.2 + Math.random() * 0.5;
-          this.speedX = (Math.random() - 0.5) * 0.3;
-          this.alpha = 0.1 + Math.random() * 0.45;
+          this.y = height + Math.random() * 80;
+          this.isPetal = Math.random() < 0.35; // 35% floating rose petals
+          this.size = this.isPetal ? (3 + Math.random() * 5) : (1 + Math.random() * 2.5);
+          this.speedY = 0.25 + Math.random() * 0.5;
+          this.speedX = (Math.random() - 0.5) * 0.4;
+          this.rotation = Math.random() * Math.PI * 2;
+          this.rotSpeed = (Math.random() - 0.5) * 0.02;
+          this.alpha = 0.15 + Math.random() * 0.45;
         }
 
         update() {
           this.y -= this.speedY;
-          this.x += this.speedX;
-          if (this.y < -10) this.reset();
+          this.x += this.speedX + Math.sin(this.y * 0.02) * 0.3;
+          this.rotation += this.rotSpeed;
+          if (this.y < -20) this.reset();
         }
 
         draw() {
           ctx.save();
           ctx.globalAlpha = this.alpha;
-          ctx.fillStyle = "#e0b096";
-          ctx.shadowBlur = 12;
-          ctx.shadowColor = "#e0b096";
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-          ctx.fill();
+          ctx.translate(this.x, this.y);
+          ctx.rotate(this.rotation);
+
+          if (this.isPetal) {
+            // Draw subtle rose petal ellipse shape
+            ctx.fillStyle = "rgba(205, 120, 100, 0.45)";
+            ctx.beginPath();
+            ctx.ellipse(0, 0, this.size, this.size * 1.6, Math.PI / 4, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            // Draw glowing light dust particle
+            ctx.fillStyle = "#f5efe6";
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "#e0b096";
+            ctx.beginPath();
+            ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+            ctx.fill();
+          }
           ctx.restore();
         }
       }
 
-      const lightParticles = Array.from({ length: 35 }, () => new LightParticle());
+      const particles = Array.from({ length: 42 }, () => new Particle());
 
       function animateParticles() {
         ctx.clearRect(0, 0, width, height);
-        lightParticles.forEach((p) => {
+        particles.forEach((p) => {
           p.update();
           p.draw();
         });
@@ -654,7 +772,7 @@
       }
       animateParticles();
 
-      /* --- Web Audio API: Soft Paper Rustle & Yiruma Melody (20% Volume) --- */
+      /* --- Web Audio API: Soft Paper Rustle & Yiruma Melody Synth --- */
       let audioCtx = null;
       let isPlayingMusic = false;
       let pianoTimeout = null;
@@ -669,7 +787,6 @@
         }
       }
 
-      // Realistic Paper Rustle Sound Effect
       function playPaperSound() {
         initAudioContext();
         const bufferSize = audioCtx.sampleRate * 0.5;
@@ -684,7 +801,7 @@
 
         const filter = audioCtx.createBiquadFilter();
         filter.type = "bandpass";
-        filter.frequency.value = 1100;
+        filter.frequency.value = 1150;
         filter.Q.value = 1.4;
 
         const gain = audioCtx.createGain();
@@ -699,7 +816,7 @@
         noise.start();
       }
 
-      // Synthesize Yiruma - River Flows in You Motif at ~20% Volume
+      // Yiruma - River Flows in You Melody
       const noteFrequencies = {
         "E4": 329.63, "F#4": 369.99, "G#4": 415.30, "A4": 440.00,
         "B4": 493.88, "C#5": 554.37, "D5": 587.33, "E5": 659.25
@@ -726,7 +843,6 @@
         osc.type = "triangle";
         osc.frequency.value = freq;
 
-        // Set to ~20% volume as requested
         gain.gain.setValueAtTime(0, start);
         gain.gain.linearRampToValueAtTime(0.06, start + 0.04);
         gain.gain.exponentialRampToValueAtTime(0.0006, start + duration);
@@ -773,7 +889,7 @@
         }
       }
 
-      /* --- Envelope Unfold & Stage Transition --- */
+      /* --- Interactive Envelope Unfold & Sequential Paragraph Reveal --- */
       let isOpened = false;
 
       function openLoveLetter() {
@@ -783,22 +899,24 @@
         const envelope = document.getElementById("envelopeWrapper");
         const hint = document.getElementById("openHint");
         const letter = document.getElementById("letterContainer");
+        const viewport = document.getElementById("appViewport");
 
-        // 1. Play realistic paper sound
+        // 1. Play paper rustle sound
         playPaperSound();
 
-        // 2. Break wax seal & open flap
+        // 2. Open envelope flap & zoom viewport slightly
         envelope.classList.add("is-open");
-        document.body.classList.add("letter-open");
+        document.body.classList.add("letter-active");
+        if (viewport) viewport.classList.add("zoom-in");
 
-        // 3. Smooth fade out of envelope
+        // 3. Fade out envelope
         setTimeout(() => {
           envelope.style.opacity = "0";
           envelope.style.transform = "scale(0.85) translateY(-30px)";
           if (hint) hint.style.opacity = "0";
-        }, 600);
+        }, 650);
 
-        // 4. Reveal full-page letter & start music
+        // 4. Reveal full-page letter stationery & start sequential paragraph reveal
         setTimeout(() => {
           envelope.style.display = "none";
           if (hint) hint.style.display = "none";
@@ -806,12 +924,36 @@
           letter.classList.add("visible");
           requestAnimationFrame(() => {
             letter.classList.add("unfolded");
+            revealLetterContentSequentially();
           });
+        }, 1200);
+      }
 
+      // Sequential Typewriter/Fade Paragraph Reveal Logic
+      function revealLetterContentSequentially() {
+        const blocks = document.querySelectorAll(".reveal-block");
+        let delay = 300;
+
+        blocks.forEach((block, index) => {
           setTimeout(() => {
-            startPianoMelody();
-          }, 1000);
-        }, 1150);
+            block.classList.add("shown");
+          }, delay);
+          delay += 1600; // 1.6s between paragraphs
+        });
+
+        // Reveal signature after all paragraphs are shown
+        const signatureDelay = delay + 600;
+        setTimeout(() => {
+          const sig = document.getElementById("signatureBlock");
+          if (sig) sig.classList.add("shown");
+        }, signatureDelay);
+
+        // 3 seconds after signature, reveal final wife message
+        const finalDelay = signatureDelay + 3000;
+        setTimeout(() => {
+          const finalMsg = document.getElementById("finalWifeMessage");
+          if (finalMsg) finalMsg.classList.add("shown");
+        }, finalDelay);
       }
     </script>
   </body>
