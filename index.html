@@ -508,7 +508,7 @@
     <canvas id="particleCanvas"></canvas>
 
     <!-- Background Music -->
-    <audio id="bgMusic" src="stephen-sanchez-until-i-found-you-official-video_a5Vdy5PI.mp3" loop preload="auto"></audio>
+    <audio id="bgMusic" src="stephen-sanchez-until-i-found-you-official-video_a5Vdy5PI.mp3" loop preload="auto" autoplay></audio>
 
     <!-- Music Widget -->
     <div class="music-widget" id="musicWidget">
@@ -629,8 +629,10 @@
         const overlay = document.getElementById("blackOverlay");
         if (overlay) overlay.style.opacity = "0";
       }, 200);
-      // Piano starts after 2s
-      setTimeout(startPianoMelody, 2000);
+      // Start music immediately; if blocked by browser, retry on first user interaction
+      startPianoMelody();
+      document.addEventListener("click", () => startPianoMelody(), { once: true });
+      document.addEventListener("touchstart", () => startPianoMelody(), { once: true });
       // Shake hint after 4s of inactivity
       startShakeHintTimer();
     });
@@ -992,10 +994,6 @@
           block.classList.add("shown");
           playPageTurnSound();
           typewriterInto(block, rawText);
-          // Scroll once — smoothly bring the new paragraph into view
-          setTimeout(() => {
-            block.scrollIntoView({ behavior: "smooth", block: "center" });
-          }, 120);
         }, delay);
 
         delay += Math.max(rawText.length * 18 + 800, 2000);
@@ -1004,18 +1002,12 @@
       const sigDelay = delay + 800;
       setTimeout(() => {
         const sig = document.getElementById("signatureBlock");
-        if (sig) {
-          sig.classList.add("shown");
-          setTimeout(() => sig.scrollIntoView({ behavior: "smooth", block: "center" }), 120);
-        }
+        if (sig) sig.classList.add("shown");
       }, sigDelay);
 
       setTimeout(() => {
         const finalMsg = document.getElementById("finalWifeMessage");
-        if (finalMsg) {
-          finalMsg.classList.add("shown");
-          setTimeout(() => finalMsg.scrollIntoView({ behavior: "smooth", block: "center" }), 120);
-        }
+        if (finalMsg) finalMsg.classList.add("shown");
       }, sigDelay + 3000);
     }
     </script>
