@@ -3,36 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Happy Birthday, My Love ❤️ | A Love Letter</title>
+    <title>Happy Birthday, My Love ❤️ | A Private Love Letter</title>
     <meta
       name="description"
-      content="An elegant, romantic handwritten love letter for a very special birthday."
+      content="A luxury handwritten love letter experience created with love."
     />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Great+Vibes&family=Parisienne&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap"
       rel="stylesheet"
     />
 
     <style>
       :root {
-        --bg-cream: #f6f0ea;
-        --bg-cream-dark: #e8ded4;
-        --ivory-paper: #fdfbf7;
-        --ivory-paper-dark: #f6efe4;
-        --rose-gold: #c58b70;
-        --rose-gold-light: #e6c5b3;
-        --rose-gold-dark: #8c5339;
-        --accent-gold: #d4a373;
-        --text-charcoal: #2c2a29;
-        --text-muted: #5e5855;
-        --envelope-red: #6e1c2e;
-        --envelope-red-dark: #4a101d;
-        --font-heading: "Great Vibes", cursive;
-        --font-body: "Poppins", sans-serif;
+        --bg-ivory: #fdfbf7;
+        --bg-cream-soft: #f6f0ea;
+        --bg-cream-dark: #eae0d5;
+        --paper-bg: #faf6f0;
+        --paper-border: #ebdcd0;
+        --rose-gold: #b8733e;
+        --rose-gold-light: #e0b096;
+        --rose-gold-dark: #7a4625;
+        --text-dark: #2c2a29;
+        --text-muted: #6b635e;
+        --font-badge: 'Great Vibes', cursive;
+        --font-title: 'Playfair Display', serif;
+        --font-body: 'Cormorant Garamond', serif;
+        --font-sig: 'Parisienne', cursive;
       }
 
       * {
@@ -46,12 +46,28 @@
         min-height: 100vh;
         overflow-x: hidden;
         font-family: var(--font-body);
-        background: radial-gradient(circle at 50% 30%, #fbf7f2 0%, #f2e8dc 60%, #e6d8c8 100%);
-        color: var(--text-charcoal);
+        background: radial-gradient(circle at 50% 30%, #fdfbf7 0%, #f4eae1 70%, #eae0d5 100%);
+        color: var(--text-dark);
         position: relative;
+        -webkit-font-smoothing: antialiased;
       }
 
-      /* Floating particles canvas */
+      /* Corner ambient lighting glow */
+      .ambient-glow {
+        position: fixed;
+        width: 450px;
+        height: 450px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(224, 176, 150, 0.25) 0%, rgba(253, 251, 247, 0) 70%);
+        filter: blur(60px);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .glow-top-left { top: -100px; left: -100px; }
+      .glow-bottom-right { bottom: -100px; right: -100px; }
+
+      /* Floating Light Particles Canvas */
       #particleCanvas {
         position: fixed;
         inset: 0;
@@ -59,14 +75,14 @@
         height: 100%;
         pointer-events: none;
         z-index: 1;
-        transition: filter 0.8s ease;
+        transition: filter 1s ease;
       }
 
-      body.letter-is-open #particleCanvas {
-        filter: blur(2px);
+      body.letter-open #particleCanvas {
+        filter: blur(3px);
       }
 
-      /* Main Layout Container */
+      /* App Container Layout */
       .app-viewport {
         position: relative;
         z-index: 5;
@@ -75,49 +91,50 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 30px 16px 60px;
+        padding: 40px 18px 80px;
       }
 
-      /* Floating Music Control Widget */
-      .music-control {
+      /* Floating Music Controller Widget */
+      .music-widget {
         position: fixed;
         top: 24px;
         right: 24px;
         z-index: 100;
         opacity: 0;
-        transform: translateY(-10px);
-        transition: opacity 0.8s ease, transform 0.8s ease;
+        transform: translateY(-12px);
+        transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
         pointer-events: none;
       }
 
-      .music-control.visible {
+      .music-widget.visible {
         opacity: 1;
         transform: translateY(0);
         pointer-events: auto;
       }
 
       .music-btn {
-        background: rgba(253, 251, 247, 0.85);
-        backdrop-filter: blur(12px);
-        border: 1px solid var(--rose-gold-light);
+        background: rgba(253, 251, 247, 0.88);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(184, 115, 62, 0.3);
         color: var(--rose-gold-dark);
         font-family: var(--font-body);
-        font-size: 0.85rem;
+        font-size: 0.95rem;
         font-weight: 500;
-        padding: 10px 20px;
-        border-radius: 30px;
+        padding: 10px 22px;
+        border-radius: 40px;
         cursor: pointer;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        box-shadow: 0 4px 20px rgba(197, 139, 112, 0.2);
-        transition: all 0.3s ease;
+        gap: 10px;
+        box-shadow: 0 8px 30px rgba(184, 115, 62, 0.15);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       .music-btn:hover {
         background: #ffffff;
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(197, 139, 112, 0.3);
+        box-shadow: 0 12px 35px rgba(184, 115, 62, 0.22);
       }
 
       .music-pulse {
@@ -125,47 +142,52 @@
         height: 8px;
         border-radius: 50%;
         background: var(--rose-gold);
-        animation: pulseRing 1.8s infinite ease-in-out;
+        animation: softPulse 2s infinite ease-in-out;
       }
 
-      @keyframes pulseRing {
-        0% { transform: scale(0.8); opacity: 0.5; }
+      @keyframes softPulse {
+        0%, 100% { transform: scale(0.8); opacity: 0.4; }
         50% { transform: scale(1.3); opacity: 1; }
-        100% { transform: scale(0.8); opacity: 0.5; }
       }
 
-      /* ENVELOPE STYLES */
+      /* ENVELOPE STAGE */
       .stage-wrapper {
         width: 100%;
-        max-width: 600px;
+        max-width: 760px;
         perspective: 1200px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        transition: all 0.8s ease;
       }
 
-      .envelope-container {
+      .envelope-wrapper {
         position: relative;
         width: 100%;
-        max-width: 520px;
-        height: 340px;
+        max-width: 500px;
+        height: 330px;
         cursor: pointer;
-        transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
+        animation: floatEnvelope 6s ease-in-out infinite;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease;
       }
 
-      .envelope-container:hover {
-        transform: translateY(-8px) scale(1.01);
+      @keyframes floatEnvelope {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
       }
 
-      .envelope-box {
+      .envelope-wrapper:hover {
+        animation-play-state: paused;
+        transform: translateY(-8px) scale(1.015);
+      }
+
+      .envelope {
         position: relative;
         width: 100%;
         height: 100%;
-        background: linear-gradient(145deg, #7a1c31 0%, #4f0d1b 100%);
-        border-radius: 18px;
-        box-shadow: 0 25px 60px rgba(74, 16, 29, 0.35), 0 10px 20px rgba(0, 0, 0, 0.2);
-        border: 1px solid rgba(224, 176, 150, 0.3);
+        background: linear-gradient(145deg, #f4eae1 0%, #eae0d5 100%);
+        border-radius: 16px;
+        box-shadow: 0 25px 60px rgba(184, 115, 62, 0.18), 0 10px 25px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.8);
         transform-style: preserve-3d;
       }
 
@@ -175,59 +197,60 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 180px;
-        background: linear-gradient(180deg, #8a2038 0%, #631425 100%);
+        height: 175px;
+        background: linear-gradient(180deg, #f8efe6 0%, #e6dace 100%);
         clip-path: polygon(0 0, 50% 100%, 100% 0);
         transform-origin: top center;
-        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 5;
-        border-top-left-radius: 18px;
-        border-top-right-radius: 18px;
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
       }
 
-      .envelope-container.is-open .envelope-flap {
+      .envelope-wrapper.is-open .envelope-flap {
         transform: rotateX(180deg);
         z-index: 1;
       }
 
-      /* Envelope Front Pocket */
+      /* Envelope Pocket Front */
       .envelope-pocket {
         position: absolute;
         bottom: 0;
         left: 0;
         width: 100%;
-        height: 190px;
-        background: linear-gradient(0deg, #5c1122 0%, #751a2e 100%);
-        clip-path: polygon(0 100%, 50% 35%, 100% 100%);
+        height: 185px;
+        background: linear-gradient(0deg, #e3d7cb 0%, #eddcd0 100%);
+        clip-path: polygon(0 100%, 50% 36%, 100% 100%);
         z-index: 4;
-        border-bottom-left-radius: 18px;
-        border-bottom-right-radius: 18px;
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
       }
 
-      /* Wax Seal */
+      /* Rose-Gold Wax Seal */
       .wax-seal {
         position: absolute;
-        top: 155px;
+        top: 150px;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 90px;
-        height: 90px;
-        background: radial-gradient(circle at 35% 35%, #e0ab76 0%, #b8733e 60%, #7d441c 100%);
+        width: 86px;
+        height: 86px;
+        background: radial-gradient(circle at 35% 35%, #d8966c 0%, #b8733e 65%, #8a4d22 100%);
         border-radius: 50%;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.5), inset 0 -3px 6px rgba(0, 0, 0, 0.4);
-        border: 2px dashed rgba(255, 240, 220, 0.4);
+        box-shadow: 0 8px 22px rgba(138, 77, 34, 0.35), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -3px 6px rgba(0, 0, 0, 0.3);
+        border: 2px dashed rgba(255, 245, 235, 0.4);
         z-index: 6;
-        transition: transform 0.5s ease, opacity 0.5s ease;
+        transition: transform 0.6s ease, opacity 0.6s ease;
       }
 
       .wax-seal-heart {
-        font-size: 1.4rem;
-        color: #fff8f0;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        font-size: 1.3rem;
+        color: #fffaf5;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.25);
         margin-bottom: 2px;
       }
 
@@ -235,242 +258,261 @@
         font-family: var(--font-body);
         font-size: 0.62rem;
         font-weight: 600;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
-        color: #fff8f0;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+        color: #fffaf5;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
       }
 
-      .envelope-container.is-open .wax-seal {
-        transform: translate(-50%, -50%) scale(0.2);
+      .envelope-wrapper.is-open .wax-seal {
+        transform: translate(-50%, -50%) scale(0.15);
         opacity: 0;
         pointer-events: none;
       }
 
-      /* Open Subtitle Hint */
+      /* Envelope Subtitle Hint */
       .open-hint {
         margin-top: 28px;
         text-align: center;
-        transition: opacity 0.5s ease;
+        transition: opacity 0.6s ease;
       }
 
       .open-time {
         font-family: var(--font-body);
-        font-size: 0.85rem;
-        letter-spacing: 0.2em;
+        font-size: 0.95rem;
+        letter-spacing: 0.18em;
         text-transform: uppercase;
         color: var(--rose-gold-dark);
         font-weight: 500;
-        background: rgba(255, 255, 255, 0.6);
-        padding: 8px 20px;
+        background: rgba(253, 251, 247, 0.7);
+        padding: 8px 24px;
         border-radius: 50px;
-        border: 1px solid var(--rose-gold-light);
-        backdrop-filter: blur(8px);
+        border: 1px solid rgba(184, 115, 62, 0.25);
+        backdrop-filter: blur(10px);
         display: inline-block;
       }
 
-      .envelope-container.is-open + .open-hint {
-        opacity: 0;
-        pointer-events: none;
-      }
-
-      /* ELEGANT LETTER PAPER (UNFOLDED) */
+      /* ELEGANT LUXURY LETTER PAPER */
       .letter-container {
         position: relative;
         width: 100%;
         max-width: 760px;
         display: none;
         opacity: 0;
-        transform: translateY(40px) scale(0.96);
+        transform: translateY(40px) scale(0.97);
         transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
         z-index: 10;
       }
 
-      .letter-container.is-visible {
+      .letter-container.visible {
         display: block;
       }
 
-      .letter-container.is-unfolded {
+      .letter-container.unfolded {
         opacity: 1;
         transform: translateY(0) scale(1);
       }
 
       .letter-paper {
-        background: linear-gradient(175deg, #fdfbf7 0%, #f6efe4 100%);
-        border-radius: 12px;
-        padding: 70px 56px 60px;
-        box-shadow: 0 20px 60px rgba(140, 83, 57, 0.15), 0 4px 16px rgba(0, 0, 0, 0.05);
+        background: linear-gradient(175deg, #fdfbf7 0%, #faf6f0 100%);
+        border-radius: 16px;
+        padding: 76px 64px 64px;
+        box-shadow: 0 30px 80px rgba(184, 115, 62, 0.12), 0 10px 30px rgba(0, 0, 0, 0.04);
         border: 1px solid #ebdcd0;
         position: relative;
-        overflow: hidden;
       }
 
-      /* Subtle paper edge shadow & inner border */
       .letter-paper::before {
         content: '';
         position: absolute;
-        inset: 16px;
-        border: 1px solid rgba(197, 139, 112, 0.3);
-        border-radius: 8px;
+        inset: 18px;
+        border: 1px solid rgba(184, 115, 62, 0.2);
+        border-radius: 10px;
         pointer-events: none;
       }
 
-      /* Decorative Floral SVG Ornaments */
-      .floral-corner {
-        position: absolute;
-        width: 64px;
-        height: 64px;
+      /* Top Badge Script */
+      .letter-top-badge {
+        font-family: var(--font-badge);
+        font-size: 1.8rem;
         color: var(--rose-gold);
-        opacity: 0.45;
-        pointer-events: none;
+        text-align: center;
+        margin-bottom: 8px;
       }
 
-      .floral-top-left { top: 24px; left: 24px; }
-      .floral-top-right { top: 24px; right: 24px; transform: scaleX(-1); }
-      .floral-bottom-left { bottom: 24px; left: 24px; transform: scaleY(-1); }
-      .floral-bottom-right { bottom: 24px; right: 24px; transform: scale(-1); }
-
-      /* Letter Header */
+      /* Letter Title & Date */
       .letter-header {
         text-align: center;
-        margin-bottom: 40px;
+        margin-bottom: 36px;
       }
 
       .letter-title {
-        font-family: var(--font-heading);
-        font-size: clamp(3rem, 7vw, 4.8rem);
-        color: var(--rose-gold-dark);
-        line-height: 1.2;
-        text-shadow: 0 2px 10px rgba(197, 139, 112, 0.15);
+        font-family: var(--font-title);
+        font-size: clamp(2.4rem, 5vw, 3.6rem);
+        color: var(--text-dark);
+        font-weight: 500;
+        line-height: 1.25;
+        letter-spacing: -0.01em;
+      }
+
+      .letter-date {
+        font-family: var(--font-body);
+        font-size: 1.05rem;
+        font-style: italic;
+        color: var(--text-muted);
+        margin-top: 10px;
+        letter-spacing: 0.05em;
       }
 
       .letter-divider {
-        width: 120px;
+        width: 140px;
         height: 1px;
-        background: linear-gradient(90deg, transparent, var(--rose-gold), transparent);
-        margin: 16px auto 0;
+        background: linear-gradient(90deg, transparent, var(--rose-gold-light), transparent);
+        margin: 20px auto 0;
       }
 
-      /* Letter Content & Paragraphs */
+      /* Letter Body Typography */
       .letter-body {
         font-family: var(--font-body);
-        font-size: 1.05rem;
-        line-height: 1.9;
-        color: var(--text-charcoal);
-        font-weight: 300;
+        font-size: 1.28rem;
+        line-height: 2.0;
+        color: var(--text-dark);
+        font-weight: 400;
       }
 
       .letter-body p {
-        margin-bottom: 22px;
+        margin-bottom: 24px;
         text-align: justify;
       }
 
       .letter-quote {
-        background: rgba(197, 139, 112, 0.08);
+        background: rgba(184, 115, 62, 0.06);
         border-left: 3px solid var(--rose-gold);
-        padding: 16px 24px;
-        margin: 28px 0;
+        padding: 18px 26px;
+        margin: 32px 0;
         font-style: italic;
-        font-size: 1.08rem;
+        font-size: 1.26rem;
         color: var(--rose-gold-dark);
-        border-radius: 0 8px 8px 0;
-        line-height: 1.85;
+        border-radius: 0 10px 10px 0;
+        line-height: 1.9;
       }
 
-      .letter-highlight-text {
-        font-weight: 500;
+      .letter-highlight-line {
+        font-weight: 600;
         color: var(--rose-gold-dark);
       }
 
-      /* Letter Signature */
-      .letter-signature {
-        margin-top: 48px;
+      /* Signature Section */
+      .letter-signature-block {
+        margin-top: 56px;
         text-align: right;
-        padding-right: 10px;
+        padding-right: 12px;
       }
 
-      .sig-sub {
+      .sig-intro {
+        font-family: var(--font-body);
+        font-size: 1.15rem;
+        color: var(--text-muted);
+        font-style: italic;
+        margin-bottom: 6px;
+      }
+
+      .sig-handwritten {
+        font-family: var(--font-sig);
+        font-size: 3.6rem;
+        color: var(--rose-gold-dark);
+        line-height: 1.1;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .beating-heart {
+        display: inline-block;
+        animation: heartPulse 2.4s infinite ease-in-out;
+        font-size: 2.2rem;
+      }
+
+      @keyframes heartPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.18); }
+      }
+
+      /* Luxury Footer */
+      .letter-footer {
+        margin-top: 50px;
+        text-align: center;
         font-family: var(--font-body);
         font-size: 0.95rem;
         color: var(--text-muted);
-        font-weight: 300;
-        margin-bottom: 4px;
+        letter-spacing: 0.08em;
       }
 
-      .sig-name {
-        font-family: var(--font-heading);
-        font-size: 3.2rem;
-        color: var(--rose-gold-dark);
-        line-height: 1.1;
-      }
-
-      /* Responsive Adjustments */
-      @media (max-width: 640px) {
+      /* Mobile Responsive Tweaks */
+      @media (max-width: 680px) {
         .letter-paper {
-          padding: 46px 26px 40px;
+          padding: 50px 28px 44px;
         }
 
         .letter-paper::before {
-          inset: 10px;
+          inset: 12px;
         }
 
-        .floral-corner {
-          width: 44px;
-          height: 44px;
-        }
-
-        .floral-top-left { top: 14px; left: 14px; }
-        .floral-top-right { top: 14px; right: 14px; }
-        .floral-bottom-left { bottom: 14px; left: 14px; }
-        .floral-bottom-right { bottom: 14px; right: 14px; }
-
-        .envelope-container {
+        .envelope-wrapper {
           height: 290px;
         }
 
         .envelope-flap {
-          height: 155px;
+          height: 150px;
         }
 
         .wax-seal {
           top: 135px;
-          width: 80px;
-          height: 80px;
+          width: 76px;
+          height: 76px;
         }
 
         .letter-body {
-          font-size: 0.98rem;
-          line-height: 1.8;
+          font-size: 1.14rem;
+          line-height: 1.85;
         }
 
         .letter-body p {
           text-align: left;
         }
+
+        .sig-handwritten {
+          font-size: 3rem;
+        }
       }
     </style>
   </head>
   <body>
-    <!-- Background Floating Particles -->
+    <!-- Soft Corner Ambient Light Glows -->
+    <div class="ambient-glow glow-top-left"></div>
+    <div class="ambient-glow glow-bottom-right"></div>
+
+    <!-- Soft Light Particles Canvas -->
     <canvas id="particleCanvas"></canvas>
 
     <!-- Floating Music Controls -->
-    <div class="music-control" id="musicControl">
+    <div class="music-widget" id="musicWidget">
       <button class="music-btn" id="musicToggleBtn" onclick="toggleMusic()">
         <span class="music-pulse"></span>
         <span id="musicBtnText">Pause Music</span>
       </button>
     </div>
 
-    <!-- Main Viewport -->
+    <!-- Main App Container -->
     <div class="app-viewport">
-      <div class="stage-wrapper" id="stageWrapper">
-        
-        <!-- Interactive Envelope -->
-        <div class="envelope-container" id="envelopeContainer" onclick="openLoveLetter()">
-          <div class="envelope-box">
+      <div class="stage-wrapper">
+
+        <!-- Envelope Container -->
+        <div class="envelope-wrapper" id="envelopeWrapper" onclick="openLoveLetter()">
+          <div class="envelope">
             <div class="envelope-flap"></div>
             <div class="envelope-pocket"></div>
-            
+
             <div class="wax-seal">
               <span class="wax-seal-heart">❤️</span>
               <span class="wax-seal-text">To My Love</span>
@@ -482,39 +524,19 @@
           <span class="open-time">Open at 12:00 AM ✨</span>
         </div>
 
-        <!-- Full Page Unfolded Love Letter -->
+        <!-- Full-Page Luxury Love Letter -->
         <div class="letter-container" id="letterContainer">
           <div class="letter-paper">
-            
-            <!-- Floral Corner Ornaments -->
-            <svg class="floral-corner floral-top-left" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20" />
-              <circle cx="25" cy="25" r="4" fill="currentColor" />
-              <circle cx="45" cy="15" r="3" fill="currentColor" />
-            </svg>
-            <svg class="floral-corner floral-top-right" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20" />
-              <circle cx="25" cy="25" r="4" fill="currentColor" />
-              <circle cx="45" cy="15" r="3" fill="currentColor" />
-            </svg>
-            <svg class="floral-corner floral-bottom-left" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20" />
-              <circle cx="25" cy="25" r="4" fill="currentColor" />
-              <circle cx="45" cy="15" r="3" fill="currentColor" />
-            </svg>
-            <svg class="floral-corner floral-bottom-right" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20" />
-              <circle cx="25" cy="25" r="4" fill="currentColor" />
-              <circle cx="45" cy="15" r="3" fill="currentColor" />
-            </svg>
 
-            <!-- Letter Heading -->
+            <div class="letter-top-badge">A Birthday Note</div>
+
             <div class="letter-header">
               <h1 class="letter-title">Happy Birthday, My Love ❤️</h1>
+              <p class="letter-date" id="currentDateString">July 26, 2026</p>
               <div class="letter-divider"></div>
             </div>
 
-            <!-- Letter Content -->
+            <!-- Letter Body -->
             <div class="letter-body">
               <p>
                 There are so many reasons why I'm grateful for you, but one memory will always stay with me. During one of the hardest phases of my life, when I felt lost, stressed, and didn't know how to move forward, you never gave up on me. You stood beside me, gave me your time, your care, and your strength when I needed it the most. I'll never forget that.
@@ -536,7 +558,7 @@
                 I pray that this year brings you endless happiness, good health, success, and everything your heart wishes for. You deserve nothing but the best.
               </p>
 
-              <p class="letter-highlight-text">
+              <p class="letter-highlight-line">
                 Happy Birthday, my future wife. ❤️
               </p>
 
@@ -545,10 +567,17 @@
               </p>
             </div>
 
-            <!-- Letter Signature -->
-            <div class="letter-signature">
-              <p class="sig-sub">With all my love,</p>
-              <p class="sig-name">Abhishek ❤️</p>
+            <!-- Signature Section -->
+            <div class="letter-signature-block">
+              <p class="sig-intro">With all my love,</p>
+              <div class="sig-handwritten">
+                Abhishek <span class="beating-heart">❤️</span>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="letter-footer">
+              Made with ❤️ by Abhishek
             </div>
 
           </div>
@@ -557,9 +586,18 @@
       </div>
     </div>
 
-    <!-- JavaScript & Audio Engine -->
+    <!-- JavaScript Engine -->
     <script>
-      /* --- Floating Particles Background (Canvas) --- */
+      // Display Today's Date Elegantly
+      document.addEventListener("DOMContentLoaded", () => {
+        const dateEl = document.getElementById("currentDateString");
+        if (dateEl) {
+          const options = { month: 'long', day: 'numeric', year: 'numeric' };
+          dateEl.textContent = new Date().toLocaleDateString('en-US', options);
+        }
+      });
+
+      /* --- Soft Light Particles Canvas --- */
       const canvas = document.getElementById("particleCanvas");
       const ctx = canvas.getContext("2d");
       let width, height;
@@ -571,51 +609,44 @@
       window.addEventListener("resize", resizeCanvas);
       resizeCanvas();
 
-      class Particle {
+      class LightParticle {
         constructor() {
           this.reset();
         }
 
         reset() {
           this.x = Math.random() * width;
-          this.y = height + Math.random() * 100;
-          this.size = 1.5 + Math.random() * 3;
-          this.speedY = 0.3 + Math.random() * 0.7;
-          this.speedX = (Math.random() - 0.5) * 0.4;
-          this.opacity = 0.1 + Math.random() * 0.6;
-          this.isHeart = Math.random() < 0.25;
+          this.y = height + Math.random() * 60;
+          this.radius = 1 + Math.random() * 2.5;
+          this.speedY = 0.2 + Math.random() * 0.5;
+          this.speedX = (Math.random() - 0.5) * 0.3;
+          this.alpha = 0.1 + Math.random() * 0.45;
         }
 
         update() {
           this.y -= this.speedY;
           this.x += this.speedX;
-          if (this.y < -20) this.reset();
+          if (this.y < -10) this.reset();
         }
 
         draw() {
           ctx.save();
-          ctx.globalAlpha = this.opacity;
-          if (this.isHeart) {
-            ctx.fillStyle = "#e0b096";
-            ctx.font = `${this.size * 3.5}px sans-serif`;
-            ctx.fillText("♥", this.x, this.y);
-          } else {
-            ctx.fillStyle = "#f5efe6";
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = "#e0b096";
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
-          }
+          ctx.globalAlpha = this.alpha;
+          ctx.fillStyle = "#e0b096";
+          ctx.shadowBlur = 12;
+          ctx.shadowColor = "#e0b096";
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+          ctx.fill();
           ctx.restore();
         }
       }
 
-      const particles = Array.from({ length: 45 }, () => new Particle());
+      const lightParticles = Array.from({ length: 35 }, () => new LightParticle());
 
       function animateParticles() {
         ctx.clearRect(0, 0, width, height);
-        particles.forEach((p) => {
+        lightParticles.forEach((p) => {
           p.update();
           p.draw();
         });
@@ -623,11 +654,10 @@
       }
       animateParticles();
 
-      /* --- Web Audio API Engine: Sound Effect & Yiruma - River Flows in You Synth --- */
+      /* --- Web Audio API: Soft Paper Rustle & Yiruma Melody (20% Volume) --- */
       let audioCtx = null;
       let isPlayingMusic = false;
-      let pianoLoopTimeout = null;
-      let audioEl = null;
+      let pianoTimeout = null;
 
       function initAudioContext() {
         if (!audioCtx) {
@@ -639,10 +669,10 @@
         }
       }
 
-      // Realistic Paper Unseal Sound Effect (Web Audio API)
-      function playPaperRustleSound() {
+      // Realistic Paper Rustle Sound Effect
+      function playPaperSound() {
         initAudioContext();
-        const bufferSize = audioCtx.sampleRate * 0.6;
+        const bufferSize = audioCtx.sampleRate * 0.5;
         const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
         const data = buffer.getChannelData(0);
         for (let i = 0; i < bufferSize; i++) {
@@ -654,13 +684,13 @@
 
         const filter = audioCtx.createBiquadFilter();
         filter.type = "bandpass";
-        filter.frequency.value = 1200;
-        filter.Q.value = 1.5;
+        filter.frequency.value = 1100;
+        filter.Q.value = 1.4;
 
         const gain = audioCtx.createGain();
         gain.gain.setValueAtTime(0, audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.18, audioCtx.currentTime + 0.1);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.55);
+        gain.gain.linearRampToValueAtTime(0.12, audioCtx.currentTime + 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
 
         noise.connect(filter);
         filter.connect(gain);
@@ -669,46 +699,37 @@
         noise.start();
       }
 
-      // Synthesize Yiruma - River Flows in You exact melody notes
-      const notesFreqs = {
-        "F#3": 185.00, "A3": 220.00, "C#4": 277.18, "D4": 293.66, "E4": 329.63,
-        "F#4": 369.99, "G#4": 415.30, "A4": 440.00, "B4": 493.88, "C#5": 554.37,
-        "D5": 587.33, "E5": 659.25
+      // Synthesize Yiruma - River Flows in You Motif at ~20% Volume
+      const noteFrequencies = {
+        "E4": 329.63, "F#4": 369.99, "G#4": 415.30, "A4": 440.00,
+        "B4": 493.88, "C#5": 554.37, "D5": 587.33, "E5": 659.25
       };
 
-      // Signature melody motif of "River Flows in You"
-      const riverFlowsMelody = [
-        // Measure 1 - F#m
+      const riverFlowsMotif = [
         { note: "A4", dur: 0.35 }, { note: "G#4", dur: 0.35 }, { note: "A4", dur: 0.35 }, { note: "G#4", dur: 0.35 },
-        { note: "A4", dur: 0.35 }, { note: "E4", dur: 0.7 }, { note: "A4", dur: 0.7 },
-        
-        // Measure 2 - D
+        { note: "A4", dur: 0.35 }, { note: "E4", dur: 0.7 },  { note: "A4", dur: 0.7 },
         { note: "A4", dur: 0.35 }, { note: "G#4", dur: 0.35 }, { note: "A4", dur: 0.35 }, { note: "G#4", dur: 0.35 },
         { note: "A4", dur: 0.35 }, { note: "E4", dur: 0.35 }, { note: "C#5", dur: 0.7 }, { note: "B4", dur: 0.7 },
-
-        // Measure 3 - A
         { note: "C#5", dur: 0.35 }, { note: "B4", dur: 0.35 }, { note: "C#5", dur: 0.35 }, { note: "B4", dur: 0.35 },
         { note: "C#5", dur: 0.35 }, { note: "G#4", dur: 0.7 }, { note: "A4", dur: 0.7 },
-
-        // Measure 4 - E
         { note: "B4", dur: 0.35 }, { note: "A4", dur: 0.35 }, { note: "G#4", dur: 0.35 }, { note: "F#4", dur: 0.7 },
         { note: "E4", dur: 1.2 }
       ];
 
-      function playPianoKey(freq, duration = 1.8, timeOffset = 0) {
+      function playPianoKey(freq, duration = 1.8) {
         if (!audioCtx || !isPlayingMusic) return;
-        const start = audioCtx.currentTime + timeOffset;
+        const start = audioCtx.currentTime;
 
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
 
-        // Warm piano-like triangle waveform with soft sine body
         osc.type = "triangle";
         osc.frequency.value = freq;
 
+        // Set to ~20% volume as requested
         gain.gain.setValueAtTime(0, start);
-        gain.gain.linearRampToValueAtTime(0.12, start + 0.04);
-        gain.gain.exponentialRampToValueAtTime(0.0008, start + duration);
+        gain.gain.linearRampToValueAtTime(0.06, start + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.0006, start + duration);
 
         osc.connect(gain);
         gain.connect(audioCtx.destination);
@@ -717,27 +738,25 @@
         osc.stop(start + duration);
       }
 
-      function startGentlePianoMelody() {
+      function startPianoMelody() {
         if (isPlayingMusic) return;
         initAudioContext();
         isPlayingMusic = true;
-        document.getElementById("musicControl").classList.add("visible");
+        document.getElementById("musicWidget").classList.add("visible");
         document.getElementById("musicBtnText").textContent = "Pause Music";
 
         let noteIdx = 0;
 
         function stepMelody() {
           if (!isPlayingMusic) return;
-
-          const current = riverFlowsMelody[noteIdx];
-          const freq = notesFreqs[current.note];
+          const current = riverFlowsMotif[noteIdx];
+          const freq = noteFrequencies[current.note];
           if (freq) {
-            playPianoKey(freq, current.dur * 3, 0);
+            playPianoKey(freq, current.dur * 3);
           }
-
-          noteIdx = (noteIdx + 1) % riverFlowsMelody.length;
+          noteIdx = (noteIdx + 1) % riverFlowsMotif.length;
           const nextDelay = current.dur * 720;
-          pianoLoopTimeout = setTimeout(stepMelody, nextDelay);
+          pianoTimeout = setTimeout(stepMelody, nextDelay);
         }
 
         stepMelody();
@@ -747,52 +766,52 @@
         const btnText = document.getElementById("musicBtnText");
         if (isPlayingMusic) {
           isPlayingMusic = false;
-          if (pianoLoopTimeout) clearTimeout(pianoLoopTimeout);
-          btnText.textContent = "Play Yiruma Melody";
+          if (pianoTimeout) clearTimeout(pianoTimeout);
+          btnText.textContent = "Play Music";
         } else {
-          startGentlePianoMelody();
+          startPianoMelody();
         }
       }
 
-      /* --- Interactive Envelope Unfolding Logic --- */
+      /* --- Envelope Unfold & Stage Transition --- */
       let isOpened = false;
 
       function openLoveLetter() {
         if (isOpened) return;
         isOpened = true;
 
-        const envelope = document.getElementById("envelopeContainer");
+        const envelope = document.getElementById("envelopeWrapper");
         const hint = document.getElementById("openHint");
         const letter = document.getElementById("letterContainer");
 
-        // 1. Play paper rustle sound effect
-        playPaperRustleSound();
+        // 1. Play realistic paper sound
+        playPaperSound();
 
-        // 2. Open envelope flap & hide seal
+        // 2. Break wax seal & open flap
         envelope.classList.add("is-open");
-        document.body.classList.add("letter-is-open");
+        document.body.classList.add("letter-open");
 
-        // 3. Smooth transition to full letter
+        // 3. Smooth fade out of envelope
         setTimeout(() => {
           envelope.style.opacity = "0";
-          envelope.style.transform = "scale(0.8) translateY(-40px)";
+          envelope.style.transform = "scale(0.85) translateY(-30px)";
           if (hint) hint.style.opacity = "0";
         }, 600);
 
+        // 4. Reveal full-page letter & start music
         setTimeout(() => {
           envelope.style.display = "none";
           if (hint) hint.style.display = "none";
 
-          letter.classList.add("is-visible");
+          letter.classList.add("visible");
           requestAnimationFrame(() => {
-            letter.classList.add("is-unfolded");
+            letter.classList.add("unfolded");
           });
 
-          // 4. Start gentle piano background music (Yiruma - River Flows in You) after letter unfolds
           setTimeout(() => {
-            startGentlePianoMelody();
+            startPianoMelody();
           }, 1000);
-        }, 1100);
+        }, 1150);
       }
     </script>
   </body>
