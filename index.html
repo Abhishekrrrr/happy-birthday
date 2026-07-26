@@ -433,6 +433,9 @@
         <button class="btn btn-secondary" onclick="toggleEnvelope()">
           ✉️ Open / Close Letter
         </button>
+        <button class="btn btn-secondary" id="music-btn" onclick="toggleMusic()">
+          🎵 Play Birthday Melody
+        </button>
       </div>
 
       <!-- Memory Gallery Section -->
@@ -455,7 +458,7 @@
       </div>
 
       <footer>
-        <p>Created for GitHub Pages deployment 🚀</p>
+        <p>Created with ❤️ | Ready for GitHub Pages deployment 🚀</p>
       </footer>
     </div>
 
@@ -490,6 +493,88 @@
           sparkle.style.animationDuration = (3 + Math.random() * 4) + "s";
           container.appendChild(sparkle);
         }
+      }
+
+      // Synthesize Happy Birthday Melody with Web Audio API
+      let audioCtx = null;
+      let isPlayingMusic = false;
+      let musicTimeout = null;
+
+      function toggleMusic() {
+        const btn = document.getElementById("music-btn");
+        if (isPlayingMusic) {
+          stopMusic();
+          btn.textContent = "🎵 Play Birthday Melody";
+        } else {
+          playHappyBirthdayMelody();
+          btn.textContent = "⏸️ Pause Melody";
+        }
+      }
+
+      function stopMusic() {
+        isPlayingMusic = false;
+        if (musicTimeout) clearTimeout(musicTimeout);
+        if (audioCtx) {
+          audioCtx.close();
+          audioCtx = null;
+        }
+      }
+
+      function playHappyBirthdayMelody() {
+        stopMusic();
+        isPlayingMusic = true;
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+
+        const notes = [
+          { note: "C4", duration: 0.35 }, { note: "C4", duration: 0.35 },
+          { note: "D4", duration: 0.7 }, { note: "C4", duration: 0.7 },
+          { note: "F4", duration: 0.7 }, { note: "E4", duration: 1.2 },
+          { note: "C4", duration: 0.35 }, { note: "C4", duration: 0.35 },
+          { note: "D4", duration: 0.7 }, { note: "C4", duration: 0.7 },
+          { note: "G4", duration: 0.7 }, { note: "F4", duration: 1.2 },
+          { note: "C4", duration: 0.35 }, { note: "C4", duration: 0.35 },
+          { note: "C5", duration: 0.7 }, { note: "A4", duration: 0.7 },
+          { note: "F4", duration: 0.7 }, { note: "E4", duration: 0.7 }, { note: "D4", duration: 0.7 },
+          { note: "A#4", duration: 0.35 }, { note: "A#4", duration: 0.35 },
+          { note: "A4", duration: 0.7 }, { note: "F4", duration: 0.7 },
+          { note: "G4", duration: 0.7 }, { note: "F4", duration: 1.4 }
+        ];
+
+        const freqs = {
+          "C4": 261.63, "D4": 293.66, "E4": 329.63, "F4": 349.23,
+          "G4": 392.00, "A4": 440.00, "A#4": 466.16, "C5": 523.25
+        };
+
+        let currTime = audioCtx.currentTime + 0.1;
+
+        notes.forEach(({ note, duration }) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc.type = "sine";
+          osc.frequency.value = freqs[note];
+
+          gain.gain.setValueAtTime(0, currTime);
+          gain.gain.linearRampToValueAtTime(0.18, currTime + 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.001, currTime + duration);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc.start(currTime);
+          osc.stop(currTime + duration);
+
+          currTime += duration + 0.08;
+        });
+
+        const totalMs = (currTime - audioCtx.currentTime) * 1000;
+        musicTimeout = setTimeout(() => {
+          if (isPlayingMusic) {
+            document.getElementById("music-btn").textContent = "🎵 Play Birthday Melody";
+            isPlayingMusic = false;
+          }
+        }, totalMs);
       }
 
       document.addEventListener("DOMContentLoaded", () => {
