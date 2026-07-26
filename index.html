@@ -623,10 +623,11 @@
       }
       animateParticles();
 
-      /* --- Web Audio API Engine: Sound Effect & Piano Synth --- */
+      /* --- Web Audio API Engine: Sound Effect & Yiruma - River Flows in You Synth --- */
       let audioCtx = null;
       let isPlayingMusic = false;
-      let pianoLoopInterval = null;
+      let pianoLoopTimeout = null;
+      let audioEl = null;
 
       function initAudioContext() {
         if (!audioCtx) {
@@ -668,41 +669,53 @@
         noise.start();
       }
 
-      // Gentle Romantic Piano Melody Synthesizer
-      function playPianoNote(freq, duration = 2.5, timeOffset = 0) {
+      // Synthesize Yiruma - River Flows in You exact melody notes
+      const notesFreqs = {
+        "F#3": 185.00, "A3": 220.00, "C#4": 277.18, "D4": 293.66, "E4": 329.63,
+        "F#4": 369.99, "G#4": 415.30, "A4": 440.00, "B4": 493.88, "C#5": 554.37,
+        "D5": 587.33, "E5": 659.25
+      };
+
+      // Signature melody motif of "River Flows in You"
+      const riverFlowsMelody = [
+        // Measure 1 - F#m
+        { note: "A4", dur: 0.35 }, { note: "G#4", dur: 0.35 }, { note: "A4", dur: 0.35 }, { note: "G#4", dur: 0.35 },
+        { note: "A4", dur: 0.35 }, { note: "E4", dur: 0.7 }, { note: "A4", dur: 0.7 },
+        
+        // Measure 2 - D
+        { note: "A4", dur: 0.35 }, { note: "G#4", dur: 0.35 }, { note: "A4", dur: 0.35 }, { note: "G#4", dur: 0.35 },
+        { note: "A4", dur: 0.35 }, { note: "E4", dur: 0.35 }, { note: "C#5", dur: 0.7 }, { note: "B4", dur: 0.7 },
+
+        // Measure 3 - A
+        { note: "C#5", dur: 0.35 }, { note: "B4", dur: 0.35 }, { note: "C#5", dur: 0.35 }, { note: "B4", dur: 0.35 },
+        { note: "C#5", dur: 0.35 }, { note: "G#4", dur: 0.7 }, { note: "A4", dur: 0.7 },
+
+        // Measure 4 - E
+        { note: "B4", dur: 0.35 }, { note: "A4", dur: 0.35 }, { note: "G#4", dur: 0.35 }, { note: "F#4", dur: 0.7 },
+        { note: "E4", dur: 1.2 }
+      ];
+
+      function playPianoKey(freq, duration = 1.8, timeOffset = 0) {
         if (!audioCtx || !isPlayingMusic) return;
         const start = audioCtx.currentTime + timeOffset;
 
-        const osc1 = audioCtx.createOscillator();
-        const osc2 = audioCtx.createOscillator();
+        const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
 
-        osc1.type = "sine";
-        osc2.type = "triangle";
-
-        osc1.frequency.value = freq;
-        osc2.frequency.value = freq * 2; // subtle harmonic chime
+        // Warm piano-like triangle waveform with soft sine body
+        osc.type = "triangle";
+        osc.frequency.value = freq;
 
         gain.gain.setValueAtTime(0, start);
-        gain.gain.linearRampToValueAtTime(0.08, start + 0.08);
+        gain.gain.linearRampToValueAtTime(0.12, start + 0.04);
         gain.gain.exponentialRampToValueAtTime(0.0008, start + duration);
 
-        osc1.connect(gain);
-        osc2.connect(gain);
+        osc.connect(gain);
         gain.connect(audioCtx.destination);
 
-        osc1.start(start);
-        osc2.start(start);
-        osc1.stop(start + duration);
-        osc2.stop(start + duration);
+        osc.start(start);
+        osc.stop(start + duration);
       }
-
-      const romanticChords = [
-        [261.63, 329.63, 392.00, 523.25], // C Major 7
-        [220.00, 261.63, 329.63, 440.00], // A Minor 7
-        [174.61, 261.63, 329.63, 349.23], // F Major 7
-        [196.00, 246.94, 293.66, 392.00]  // G Major
-      ];
 
       function startGentlePianoMelody() {
         if (isPlayingMusic) return;
@@ -711,27 +724,31 @@
         document.getElementById("musicControl").classList.add("visible");
         document.getElementById("musicBtnText").textContent = "Pause Music";
 
-        let chordIndex = 0;
+        let noteIdx = 0;
 
-        function playChordArpeggio() {
+        function stepMelody() {
           if (!isPlayingMusic) return;
-          const chord = romanticChords[chordIndex];
-          chord.forEach((freq, idx) => {
-            playPianoNote(freq, 3.2, idx * 0.45);
-          });
-          chordIndex = (chordIndex + 1) % romanticChords.length;
+
+          const current = riverFlowsMelody[noteIdx];
+          const freq = notesFreqs[current.note];
+          if (freq) {
+            playPianoKey(freq, current.dur * 3, 0);
+          }
+
+          noteIdx = (noteIdx + 1) % riverFlowsMelody.length;
+          const nextDelay = current.dur * 720;
+          pianoLoopTimeout = setTimeout(stepMelody, nextDelay);
         }
 
-        playChordArpeggio();
-        pianoLoopInterval = setInterval(playChordArpeggio, 4200);
+        stepMelody();
       }
 
       function toggleMusic() {
         const btnText = document.getElementById("musicBtnText");
         if (isPlayingMusic) {
           isPlayingMusic = false;
-          if (pianoLoopInterval) clearInterval(pianoLoopInterval);
-          btnText.textContent = "Play Music";
+          if (pianoLoopTimeout) clearTimeout(pianoLoopTimeout);
+          btnText.textContent = "Play Yiruma Melody";
         } else {
           startGentlePianoMelody();
         }
@@ -771,7 +788,7 @@
             letter.classList.add("is-unfolded");
           });
 
-          // 4. Start gentle piano background music after letter unfolds
+          // 4. Start gentle piano background music (Yiruma - River Flows in You) after letter unfolds
           setTimeout(() => {
             startGentlePianoMelody();
           }, 1000);
