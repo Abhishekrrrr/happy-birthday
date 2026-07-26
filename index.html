@@ -958,23 +958,22 @@
     // 10. TYPEWRITER PARAGRAPH REVEAL
     // ─────────────────────────────────────────────
     function typewriterInto(container, text, onDone) {
-      // For quote blocks, write directly; for p-containers, write into the <p>
       const target = container.querySelector("p") || container;
       target.textContent = "";
-      // add blinking cursor
       const cursor = document.createElement("span");
       cursor.className = "tw-cursor";
       target.appendChild(cursor);
 
       let i = 0;
-      const speed = 18; // ms per char
+      const speed = 18;
 
       function type() {
         if (i < text.length) {
           target.insertBefore(document.createTextNode(text[i]), cursor);
           i++;
-          // play subtle page-turn sound every ~80 chars
           if (i % 80 === 0) playPageTurnSound();
+          // Auto-scroll so cursor is always in view while typing
+          cursor.scrollIntoView({ behavior: "smooth", block: "end" });
           setTimeout(type, speed);
         } else {
           cursor.remove();
@@ -984,35 +983,40 @@
       type();
     }
 
-
     function revealLetterContentSequentially() {
       const blocks = Array.from(document.querySelectorAll(".reveal-block"));
       let delay = 300;
 
-      blocks.forEach((block, idx) => {
+      blocks.forEach((block) => {
         const rawText = block.getAttribute("data-text") || "";
-        // Estimate typewriter duration so next block waits appropriately
         const twDuration = rawText.length * 18 + 400;
 
         setTimeout(() => {
           block.classList.add("shown");
           playPageTurnSound();
-          typewriterInto(block, rawText);
-          block.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          // Scroll block into view first, then typewriter takes over
+          block.scrollIntoView({ behavior: "smooth", block: "start" });
+          setTimeout(() => typewriterInto(block, rawText), 400);
         }, delay);
 
-        delay += Math.max(twDuration, 1400);
+        delay += Math.max(rawText.length * 18 + 800, 1600);
       });
 
       const sigDelay = delay + 600;
       setTimeout(() => {
         const sig = document.getElementById("signatureBlock");
-        if (sig) sig.classList.add("shown");
+        if (sig) {
+          sig.classList.add("shown");
+          sig.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
       }, sigDelay);
 
       setTimeout(() => {
         const finalMsg = document.getElementById("finalWifeMessage");
-        if (finalMsg) finalMsg.classList.add("shown");
+        if (finalMsg) {
+          finalMsg.classList.add("shown");
+          finalMsg.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
       }, sigDelay + 3000);
     }
     </script>
