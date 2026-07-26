@@ -621,7 +621,8 @@
     window.addEventListener("DOMContentLoaded", () => {
       const dateEl = document.getElementById("currentDateString");
       if (dateEl) {
-        dateEl.textContent = new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+        const bday = new Date(new Date().getFullYear(), 6, 27); // July 27
+        dateEl.textContent = bday.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
       }
       // Fade in from black
       setTimeout(() => {
