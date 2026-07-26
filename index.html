@@ -507,6 +507,9 @@
     <!-- Particle Canvas -->
     <canvas id="particleCanvas"></canvas>
 
+    <!-- Background Music -->
+    <audio id="bgMusic" src="stephen-sanchez-until-i-found-you-official-video_a5Vdy5PI.mp3" loop preload="auto"></audio>
+
     <!-- Music Widget -->
     <div class="music-widget" id="musicWidget">
       <button class="music-btn" id="musicToggleBtn" onclick="toggleMusic()">
@@ -838,159 +841,77 @@
     // ─────────────────────────────────────────────
     // 8. WEB AUDIO — Paper rustle, piano + bass
     // ─────────────────────────────────────────────
-    let audioCtx = null;
+    // 8. REAL AUDIO — Stephen Sanchez "Until I Found You"
+    // ─────────────────────────────────────────────
     let isPlayingMusic = false;
-    let pianoTimeout = null;
-
-    function initAudioContext() {
-      if (!audioCtx) {
-        const AC = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AC();
-      }
-      if (audioCtx.state === "suspended") audioCtx.resume();
-    }
 
     function playPaperSound() {
-      initAudioContext();
-      const bufferSize = audioCtx.sampleRate * 0.5;
-      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      // keep paper rustle using Web Audio API
+      const AC = window.AudioContext || window.webkitAudioContext;
+      const tmpCtx = new AC();
+      const bufferSize = tmpCtx.sampleRate * 0.5;
+      const buffer = tmpCtx.createBuffer(1, bufferSize, tmpCtx.sampleRate);
       const data = buffer.getChannelData(0);
       for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-
-      const noise = audioCtx.createBufferSource();
+      const noise = tmpCtx.createBufferSource();
       noise.buffer = buffer;
-      const filter = audioCtx.createBiquadFilter();
+      const filter = tmpCtx.createBiquadFilter();
       filter.type = "bandpass"; filter.frequency.value = 1150; filter.Q.value = 1.4;
-      const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(0, audioCtx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.10, audioCtx.currentTime + 0.08);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
-      noise.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
+      const gain = tmpCtx.createGain();
+      gain.gain.setValueAtTime(0, tmpCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.10, tmpCtx.currentTime + 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.001, tmpCtx.currentTime + 0.45);
+      noise.connect(filter); filter.connect(gain); gain.connect(tmpCtx.destination);
       noise.start();
+      setTimeout(() => tmpCtx.close(), 1000);
     }
 
-    // ── "Until I Found You" – Stephen Sanchez (key of E major) ──
-    const noteFreq = {
-      // melody (treble)
-      "E4":329.63,"F#4":369.99,"G#4":415.30,"A4":440.00,"B4":493.88,
-      "C#5":554.37,"D#5":622.25,"E5":659.25,"F#5":739.99,"G#5":830.61,
-      "A5":880.00,"B5":987.77,
-      // bass / chords
-      "E2":82.41,"B2":123.47,"C#3":138.59,"A2":110.00,
-      "E3":164.81,"G#3":207.65,"A3":220.00,"B3":246.94,"C#4":277.18,
-      "F#3":184.99,"D#4":311.13
-    };
-
-    // "Until I Found You" — main piano melody (E major, flowing feel)
-    // Chord progression: E → C#m → A → B  (repeating)
-    const melody = [
-      // ── Phrase 1 — E major ──
-      {n:"B5",d:0.45},{n:"A5",d:0.30},{n:"G#5",d:0.30},
-      {n:"F#5",d:0.45},{n:"E5",d:0.60},
-      {n:"E5",d:0.30},{n:"F#5",d:0.30},{n:"G#5",d:0.30},
-
-      // ── Phrase 2 — C#m ──
-      {n:"A5",d:0.45},{n:"G#5",d:0.30},{n:"F#5",d:0.30},
-      {n:"E5",d:0.45},{n:"C#5",d:0.60},
-      {n:"C#5",d:0.30},{n:"E5",d:0.30},{n:"F#5",d:0.30},
-
-      // ── Phrase 3 — A major ──
-      {n:"G#5",d:0.45},{n:"F#5",d:0.30},{n:"E5",d:0.30},
-      {n:"A4",d:0.45},{n:"B4",d:0.30},{n:"C#5",d:0.30},
-      {n:"E5",d:0.60},
-
-      // ── Phrase 4 — B major (resolve) ──
-      {n:"F#5",d:0.45},{n:"E5",d:0.30},{n:"D#5",d:0.30},
-      {n:"E5",d:0.45},{n:"B4",d:0.90},
-
-      // ── Chorus lift — E ──
-      {n:"E5",d:0.30},{n:"G#5",d:0.30},{n:"B5",d:0.45},
-      {n:"A5",d:0.45},{n:"G#5",d:0.30},{n:"F#5",d:0.30},
-      {n:"E5",d:0.90},
-
-      // ── Chorus — C#m ──
-      {n:"C#5",d:0.30},{n:"E5",d:0.30},{n:"G#5",d:0.45},
-      {n:"F#5",d:0.45},{n:"E5",d:0.30},{n:"C#5",d:0.30},
-      {n:"B4",d:0.90},
-
-      // ── Chorus — A ──
-      {n:"A4",d:0.30},{n:"C#5",d:0.30},{n:"E5",d:0.45},
-      {n:"F#5",d:0.45},{n:"E5",d:0.30},{n:"C#5",d:0.30},
-      {n:"A4",d:0.90},
-
-      // ── Chorus — B (resolve back) ──
-      {n:"B4",d:0.30},{n:"D#5",d:0.30},{n:"F#5",d:0.45},
-      {n:"E5",d:0.45},{n:"D#5",d:0.30},{n:"B4",d:0.30},
-      {n:"E5",d:1.20}
-    ];
-
-    // Bass chords — E  C#m  A  B  (soft arpeggiated)
-    const bassPattern = [
-      ["E2","B2","E3","G#3"],    // E major
-      ["C#3","G#3","C#4","E3"],  // C# minor
-      ["A2","E3","A3","C#4"],    // A major
-      ["B2","F#3","B3","D#4"]    // B major
-    ];
-
-    function playNote(freq, duration, gainVal=0.06, type="triangle") {
-      if (!audioCtx || !isPlayingMusic) return;
-      const t = audioCtx.currentTime;
-      const osc = audioCtx.createOscillator();
-      const g   = audioCtx.createGain();
-      osc.type = type; osc.frequency.value = freq;
-      g.gain.setValueAtTime(0, t);
-      g.gain.linearRampToValueAtTime(gainVal, t + 0.04);
-      g.gain.exponentialRampToValueAtTime(0.0006, t + duration);
-      osc.connect(g); g.connect(audioCtx.destination);
-      osc.start(t); osc.stop(t + duration);
+    function playPageTurnSound() {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      const tmpCtx = new AC();
+      const bufferSize = Math.floor(tmpCtx.sampleRate * 0.18);
+      const buffer = tmpCtx.createBuffer(1, bufferSize, tmpCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+      const src = tmpCtx.createBufferSource();
+      src.buffer = buffer;
+      const filt = tmpCtx.createBiquadFilter();
+      filt.type = "highpass"; filt.frequency.value = 2000;
+      const g = tmpCtx.createGain();
+      g.gain.setValueAtTime(0.04, tmpCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, tmpCtx.currentTime + 0.18);
+      src.connect(filt); filt.connect(g); g.connect(tmpCtx.destination);
+      src.start();
+      setTimeout(() => tmpCtx.close(), 500);
     }
-
-    function playBassChord(chordNotes) {
-      if (!audioCtx || !isPlayingMusic) return;
-      chordNotes.forEach(n => {
-        const freq = noteFreq[n];
-        if (freq) playNote(freq, 2.2, 0.028, "sine");
-      });
-    }
-
-    let melodyIdx = 0;
-    let bassIdx   = 0;
-    let beatCount = 0;
 
     function startPianoMelody() {
       if (isPlayingMusic) return;
-      initAudioContext();
-      isPlayingMusic = true;
-      document.getElementById("musicWidget").classList.add("visible");
-      document.getElementById("musicBtnText").textContent = "♪ Until I Found You";
-
-      function stepMelody() {
-        if (!isPlayingMusic) return;
-        const cur = melody[melodyIdx];
-        const freq = noteFreq[cur.n];
-        if (freq) playNote(freq, cur.d * 3, 0.06, "triangle");
-
-        // play bass chord every 4 melody steps
-        if (beatCount % 4 === 0) {
-          playBassChord(bassPattern[bassIdx % bassPattern.length]);
-          bassIdx++;
-        }
-        beatCount++;
-        melodyIdx = (melodyIdx + 1) % melody.length;
-        pianoTimeout = setTimeout(stepMelody, cur.d * 720);
-      }
-      stepMelody();
+      const audio = document.getElementById("bgMusic");
+      audio.volume = 0.72;
+      audio.play().then(() => {
+        isPlayingMusic = true;
+        document.getElementById("musicWidget").classList.add("visible");
+        document.getElementById("musicBtnText").textContent = "♪ Until I Found You";
+      }).catch(() => {
+        // autoplay blocked — show widget so user can click
+        isPlayingMusic = false;
+        document.getElementById("musicWidget").classList.add("visible");
+        document.getElementById("musicBtnText").textContent = "▶ Play Music";
+      });
     }
 
     function toggleMusic() {
+      const audio   = document.getElementById("bgMusic");
       const btnText = document.getElementById("musicBtnText");
       if (isPlayingMusic) {
+        audio.pause();
         isPlayingMusic = false;
-        if (pianoTimeout) clearTimeout(pianoTimeout);
         btnText.textContent = "▶ Play Music";
       } else {
+        audio.play();
+        isPlayingMusic = true;
         btnText.textContent = "♪ Until I Found You";
-        startPianoMelody();
       }
     }
 
