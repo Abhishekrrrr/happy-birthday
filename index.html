@@ -37,6 +37,7 @@
         width: 100%;
         min-height: 100vh;
         overflow-x: hidden;
+        scroll-behavior: smooth;
         font-family: var(--font-body);
         background: radial-gradient(circle at 50% 30%, #fdfbf7 0%, #f4eae1 70%, #eae0d5 100%);
         color: var(--text-dark);
@@ -128,9 +129,7 @@
         align-items: center;
         justify-content: center;
         padding: 40px 18px 80px;
-        transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
       }
-      .app-viewport.zoom-in { transform: scale(1.03); }
 
       /* ── Music Widget ── */
       .music-widget {
@@ -573,7 +572,7 @@
             </svg>
 
             <div class="letter-header">
-              <h1 class="letter-title">Happy Birthday,<br/>My Love ❤️</h1>
+              <h1 class="letter-title">Happy Birthday,<br/>my love. ❤️</h1>
               <p class="letter-date" id="currentDateString">July 26, 2026</p>
               <div class="letter-divider"></div>
             </div>
@@ -583,9 +582,9 @@
 
               <div class="reveal-block" data-text="You know me better than anyone. I overthink, I worry, and I get scared about things. But you're different. You're brave, calm, and fearless in ways I truly admire. Whenever I lose confidence, you're the one who reminds me that we can face anything together. Because of you, I've become a better and stronger person."><p></p></div>
 
-              <div class="reveal-block letter-quote" data-text='"Thank you for loving me not only during the happy moments but also during the days when I wasn\'t at my best. That\'s the kind of love I\'ll always cherish."'></div>
+              <div class="reveal-block letter-quote" data-text="Thank you for loving me not only during the happy moments but also during the days when I wasn't at my best. That's the kind of love I'll always cherish."></div>
 
-              <div class="reveal-block letter-quote" data-text='"This is the last birthday we\'ll celebrate before we become husband and wife, and that makes today even more special. I can\'t wait to spend the rest of my life with you, creating beautiful memories together."'></div>
+              <div class="reveal-block letter-quote" data-text="This is the last birthday we'll celebrate before we become husband and wife, and that makes today even more special. I can't wait to spend the rest of my life with you, creating beautiful memories together."></div>
 
               <div class="reveal-block" data-text="I pray that this year brings you endless happiness, good health, success, and everything your heart wishes for. You deserve nothing but the best."><p></p></div>
 
@@ -939,7 +938,7 @@
       initAudioContext();
       isPlayingMusic = true;
       document.getElementById("musicWidget").classList.add("visible");
-      document.getElementById("musicBtnText").textContent = "Pause Music";
+      document.getElementById("musicBtnText").textContent = "♪ I Found You";
 
       function stepMelody() {
         if (!isPlayingMusic) return;
@@ -984,12 +983,10 @@
       const envelope = document.getElementById("envelopeWrapper");
       const hint     = document.getElementById("openHint");
       const letter   = document.getElementById("letterContainer");
-      const viewport = document.getElementById("appViewport");
 
       playPaperSound();
       envelope.classList.add("is-open");
       document.body.classList.add("letter-active");
-      if (viewport) viewport.classList.add("zoom-in");
 
       // Confetti burst
       setTimeout(launchConfetti, 300);
@@ -1071,6 +1068,7 @@
           block.classList.add("shown");
           playPageTurnSound();
           typewriterInto(block, rawText);
+          block.scrollIntoView({ behavior: "smooth", block: "nearest" });
         }, delay);
 
         delay += Math.max(twDuration, 1400);
