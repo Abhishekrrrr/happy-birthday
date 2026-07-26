@@ -130,24 +130,33 @@
         perspective: 1000px;
         margin: 20px 0 50px;
         width: 100%;
-        max-width: 520px;
+        max-width: 700px;
         cursor: pointer;
       }
 
       .envelope {
         position: relative;
         width: 100%;
+        min-height: 320px;
         height: 320px;
         background: linear-gradient(135deg, #7c1a3e 0%, #4a0d24 100%);
         border-radius: 16px;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 107, 139, 0.15);
         border: 1px solid rgba(255, 215, 0, 0.25);
-        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s ease, box-shadow 0.4s ease;
+        overflow: hidden;
       }
 
       .envelope:hover {
         transform: translateY(-6px);
         box-shadow: 0 28px 70px rgba(0, 0, 0, 0.7), 0 0 50px rgba(255, 215, 0, 0.25);
+      }
+
+      .envelope.open {
+        height: auto;
+        overflow: visible;
+        background: rgba(74, 13, 36, 0.4);
+        backdrop-filter: blur(12px);
       }
 
       /* Flap */
@@ -160,7 +169,7 @@
         background: linear-gradient(180deg, #911f49 0%, #6e1537 100%);
         clip-path: polygon(0 0, 50% 100%, 100% 0);
         transform-origin: top center;
-        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
         z-index: 4;
         border-top-left-radius: 16px;
         border-top-right-radius: 16px;
@@ -168,6 +177,7 @@
 
       .envelope.open .flap {
         transform: rotateX(180deg);
+        opacity: 0.15;
         z-index: 1;
       }
 
@@ -206,61 +216,69 @@
       /* Letter Card Inside */
       .letter-card {
         position: relative;
-        width: 92%;
-        margin: 0 auto;
+        width: 94%;
+        margin: 0 auto 24px;
         top: 16px;
         background: linear-gradient(165deg, #fffdfa 0%, #f7f1e5 100%);
         color: #2b1b24;
         border-radius: 12px;
-        padding: 36px 30px;
+        padding: 42px 36px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         z-index: 2;
-        transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), max-height 0.6s ease;
         border: 1px solid #e3d5c3;
+        max-height: 280px;
+        overflow: hidden;
       }
 
       .envelope.open .letter-card {
-        transform: translateY(-80px) scale(1.02);
+        max-height: 4000px;
+        overflow: visible;
+        transform: translateY(-40px) scale(1.01);
         z-index: 6;
       }
 
       .letter-content {
         font-family: var(--font-serif);
-        font-size: 1.18rem;
-        line-height: 1.8;
+        font-size: 1.22rem;
+        line-height: 1.85;
         color: #382430;
       }
 
       .letter-salutation {
         font-family: var(--font-script);
-        font-size: 2.2rem;
+        font-size: 2.6rem;
         color: #8b1a3a;
-        margin-bottom: 16px;
+        margin-bottom: 20px;
+        line-height: 1.2;
       }
 
       .letter-body {
-        margin-bottom: 20px;
-        text-align: justify;
+        margin-bottom: 24px;
+        text-align: left;
       }
 
       .letter-body p {
-        margin-bottom: 14px;
+        margin-bottom: 18px;
+        text-indent: 0;
       }
 
       .letter-highlight {
-        background: rgba(255, 107, 139, 0.12);
-        border-left: 3px solid #8b1a3a;
-        padding: 10px 16px;
-        margin: 16px 0;
+        background: rgba(139, 26, 58, 0.07);
+        border-left: 4px solid #8b1a3a;
+        padding: 14px 20px;
+        margin: 20px 0;
         font-style: italic;
-        border-radius: 0 8px 8px 0;
+        font-size: 1.25rem;
+        border-radius: 0 10px 10px 0;
+        color: #5d1226;
       }
 
       .letter-signature {
         text-align: right;
-        margin-top: 24px;
+        margin-top: 30px;
         font-family: var(--font-script);
-        font-size: 2.4rem;
+        font-size: 2.6rem;
         color: #8b1a3a;
       }
 
@@ -406,20 +424,38 @@
 
           <!-- The Letter Inside -->
           <div class="letter-card" id="letter-card">
-            <div class="letter-salutation">Dearest Friend,</div>
+            <div class="letter-salutation">Happy Birthday, my love. ❤️🎂</div>
             <div class="letter-content">
               <div class="letter-body">
                 <p>
-                  Today is a day to celebrate you! May your coming year be filled with unbounded joy, brilliant achievements, peace, and unforgettable memories.
+                  Today is all about celebrating the wonderful person you are. Every day, I'm grateful that you came into my life.
+                </p>
+                <p>
+                  When I moved to my new job, life became one of the hardest phases I've ever faced. I was alone in Kochi, stressed, overwhelmed, and there were days when I didn't know how to deal with everything. I felt lonely, I cried, and I questioned myself more than I ever had before.
+                </p>
+                <p>
+                  But you never left my side. You came all the way to stay with me for a week, just so I wouldn't have to go through it alone. You gave me strength when I had almost none. You listened to me, comforted me, and reminded me that things would get better. I will always be grateful for that. It was one of the biggest acts of love anyone has ever shown me.
+                </p>
+                <p>
+                  You also know me better than anyone. I'm someone who gets scared easily. I overthink, I worry about everything, and sometimes I lose confidence in myself. But you're the complete opposite. You're brave, calm, and strong. Whenever I'm afraid, you're the one who tells me, <em>"We'll figure it out."</em> You give me courage when I don't have any, and because of you, I've become a stronger person.
                 </p>
                 <div class="letter-highlight">
-                  "Count your age by friends, not years. Count your life by smiles, not tears." — John Lennon
+                  "This birthday is extra special because it's the last one we'll celebrate before we become husband and wife. I can't wait to spend the rest of my life with you—celebrating the happy moments, facing the difficult ones together, and growing old side by side."
                 </div>
                 <p>
-                  Thank you for bringing so much warmth, kindness, and light into the lives of everyone around you. Here's to making every single moment of this new chapter count!
+                  I pray that God blesses you with good health, happiness, peace, and success in everything you do. I promise that just as you've stood by me through my hardest days, I'll always stand by you through yours.
+                </p>
+                <div class="letter-highlight">
+                  "Thank you for being my strength when I was weak, my courage when I was afraid, and my home when I felt lost."
+                </div>
+                <p>
+                  <strong>Happy Birthday, my future wife. ❤️</strong>
+                </p>
+                <p>
+                  I love you more than words can ever express. Here's to a lifetime of birthdays together. ❤️
                 </p>
               </div>
-              <div class="letter-signature">With lots of love ❤️</div>
+              <div class="letter-signature">Forever & Always Yours ❤️</div>
             </div>
           </div>
         </div>
