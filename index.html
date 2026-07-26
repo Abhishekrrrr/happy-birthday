@@ -3,38 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Happy Birthday! 🎂✨ | A Special Digital Letter</title>
+    <title>Happy Birthday, My Love ❤️ | A Love Letter</title>
     <meta
       name="description"
-      content="A magical, interactive birthday letter filled with heartfelt wishes, golden memories, and sweet surprises."
+      content="An elegant, romantic handwritten love letter for a very special birthday."
     />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&family=Great+Vibes&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap"
       rel="stylesheet"
     />
 
-    <!-- Canvas Confetti Library -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
     <style>
       :root {
-        --bg-grad-1: #0f0c20;
-        --bg-grad-2: #1a102f;
-        --bg-grad-3: #2d123d;
-        --card-bg: rgba(255, 255, 255, 0.07);
-        --card-border: rgba(255, 215, 0, 0.25);
-        --accent-gold: #f3cf7a;
-        --gold-glow: #e2b047;
-        --rose-accent: #ff6b8b;
-        --text-primary: #fff8f0;
-        --text-secondary: #e0d0e6;
-        --font-serif: "Cormorant Garamond", Georgia, serif;
-        --font-sans: "Outfit", sans-serif;
-        --font-script: "Great Vibes", cursive;
+        --bg-cream: #f6f0ea;
+        --bg-cream-dark: #e8ded4;
+        --ivory-paper: #fdfbf7;
+        --ivory-paper-dark: #f6efe4;
+        --rose-gold: #c58b70;
+        --rose-gold-light: #e6c5b3;
+        --rose-gold-dark: #8c5339;
+        --accent-gold: #d4a373;
+        --text-charcoal: #2c2a29;
+        --text-muted: #5e5855;
+        --envelope-red: #6e1c2e;
+        --envelope-red-dark: #4a101d;
+        --font-heading: "Great Vibes", cursive;
+        --font-body: "Poppins", sans-serif;
       }
 
       * {
@@ -43,574 +41,742 @@
         padding: 0;
       }
 
-      body {
-        font-family: var(--font-sans);
-        background: radial-gradient(circle at 50% 20%, #2a1435 0%, #120a1f 60%, #08040d 100%);
-        color: var(--text-primary);
+      html, body {
+        width: 100%;
         min-height: 100vh;
         overflow-x: hidden;
+        font-family: var(--font-body);
+        background: radial-gradient(circle at 50% 30%, #fbf7f2 0%, #f2e8dc 60%, #e6d8c8 100%);
+        color: var(--text-charcoal);
         position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        padding: 40px 20px 80px;
       }
 
-      /* Ambient floating sparkles */
-      .ambient-canvas {
+      /* Floating particles canvas */
+      #particleCanvas {
         position: fixed;
         inset: 0;
-        pointer-events: none;
-        z-index: 0;
-      }
-
-      .sparkle {
-        position: absolute;
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background: #fff;
-        box-shadow: 0 0 10px #ffb3d9, 0 0 20px #ffd700;
-        animation: floatSparkle 6s infinite ease-in-out;
-      }
-
-      @keyframes floatSparkle {
-        0%, 100% { opacity: 0; transform: translateY(0) scale(0.5); }
-        50% { opacity: 0.8; transform: translateY(-40px) scale(1.2); }
-      }
-
-      /* Header & Container */
-      .container {
-        position: relative;
-        z-index: 10;
-        max-width: 800px;
         width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+        transition: filter 0.8s ease;
+      }
+
+      body.letter-is-open #particleCanvas {
+        filter: blur(2px);
+      }
+
+      /* Main Layout Container */
+      .app-viewport {
+        position: relative;
+        z-index: 5;
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
+        padding: 30px 16px 60px;
       }
 
-      .top-badge {
-        font-family: var(--font-sans);
+      /* Floating Music Control Widget */
+      .music-control {
+        position: fixed;
+        top: 24px;
+        right: 24px;
+        z-index: 100;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+        pointer-events: none;
+      }
+
+      .music-control.visible {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      .music-btn {
+        background: rgba(253, 251, 247, 0.85);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--rose-gold-light);
+        color: var(--rose-gold-dark);
+        font-family: var(--font-body);
         font-size: 0.85rem;
-        letter-spacing: 0.35em;
-        text-transform: uppercase;
-        color: var(--accent-gold);
-        background: rgba(243, 207, 122, 0.1);
-        border: 1px solid rgba(243, 207, 122, 0.3);
-        padding: 8px 20px;
-        border-radius: 50px;
-        margin-bottom: 24px;
-        backdrop-filter: blur(8px);
-        animation: fadeInDown 1s ease;
-      }
-
-      h1.birthday-title {
-        font-family: var(--font-script);
-        font-size: clamp(3.2rem, 8vw, 5.5rem);
-        color: var(--accent-gold);
-        text-shadow: 0 0 25px rgba(243, 207, 122, 0.4), 0 4px 15px rgba(0, 0, 0, 0.5);
-        text-align: center;
-        margin-bottom: 10px;
-        line-height: 1.1;
-      }
-
-      .subtitle {
-        font-family: var(--font-serif);
-        font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-        color: var(--text-secondary);
-        font-style: italic;
-        text-align: center;
-        margin-bottom: 40px;
-      }
-
-      /* Interactive Envelope */
-      .envelope-wrapper {
-        perspective: 1000px;
-        margin: 20px 0 50px;
-        width: 100%;
-        max-width: 700px;
+        font-weight: 500;
+        padding: 10px 20px;
+        border-radius: 30px;
         cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 20px rgba(197, 139, 112, 0.2);
+        transition: all 0.3s ease;
       }
 
-      .envelope {
+      .music-btn:hover {
+        background: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(197, 139, 112, 0.3);
+      }
+
+      .music-pulse {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--rose-gold);
+        animation: pulseRing 1.8s infinite ease-in-out;
+      }
+
+      @keyframes pulseRing {
+        0% { transform: scale(0.8); opacity: 0.5; }
+        50% { transform: scale(1.3); opacity: 1; }
+        100% { transform: scale(0.8); opacity: 0.5; }
+      }
+
+      /* ENVELOPE STYLES */
+      .stage-wrapper {
+        width: 100%;
+        max-width: 600px;
+        perspective: 1200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: all 0.8s ease;
+      }
+
+      .envelope-container {
         position: relative;
         width: 100%;
-        min-height: 320px;
-        height: 320px;
-        background: linear-gradient(135deg, #7c1a3e 0%, #4a0d24 100%);
-        border-radius: 16px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 107, 139, 0.15);
-        border: 1px solid rgba(255, 215, 0, 0.25);
-        transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s ease, box-shadow 0.4s ease;
-        overflow: hidden;
+        max-width: 520px;
+        height: 340px;
+        cursor: pointer;
+        transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
       }
 
-      .envelope:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.7), 0 0 50px rgba(255, 215, 0, 0.25);
+      .envelope-container:hover {
+        transform: translateY(-8px) scale(1.01);
       }
 
-      .envelope.open {
-        height: auto;
-        overflow: visible;
-        background: rgba(74, 13, 36, 0.4);
-        backdrop-filter: blur(12px);
+      .envelope-box {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(145deg, #7a1c31 0%, #4f0d1b 100%);
+        border-radius: 18px;
+        box-shadow: 0 25px 60px rgba(74, 16, 29, 0.35), 0 10px 20px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(224, 176, 150, 0.3);
+        transform-style: preserve-3d;
       }
 
-      /* Flap */
-      .flap {
+      /* Envelope Flap */
+      .envelope-flap {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
-        height: 170px;
-        background: linear-gradient(180deg, #911f49 0%, #6e1537 100%);
+        height: 180px;
+        background: linear-gradient(180deg, #8a2038 0%, #631425 100%);
         clip-path: polygon(0 0, 50% 100%, 100% 0);
         transform-origin: top center;
-        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
-        z-index: 4;
-        border-top-left-radius: 16px;
-        border-top-right-radius: 16px;
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 5;
+        border-top-left-radius: 18px;
+        border-top-right-radius: 18px;
       }
 
-      .envelope.open .flap {
+      .envelope-container.is-open .envelope-flap {
         transform: rotateX(180deg);
-        opacity: 0.15;
         z-index: 1;
+      }
+
+      /* Envelope Front Pocket */
+      .envelope-pocket {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 190px;
+        background: linear-gradient(0deg, #5c1122 0%, #751a2e 100%);
+        clip-path: polygon(0 100%, 50% 35%, 100% 100%);
+        z-index: 4;
+        border-bottom-left-radius: 18px;
+        border-bottom-right-radius: 18px;
       }
 
       /* Wax Seal */
       .wax-seal {
         position: absolute;
-        top: 140px;
+        top: 155px;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 76px;
-        height: 76px;
-        background: radial-gradient(circle at 35% 35%, #ffd700 0%, #b8860b 70%, #8b6508 100%);
+        width: 90px;
+        height: 90px;
+        background: radial-gradient(circle at 35% 35%, #e0ab76 0%, #b8733e 60%, #7d441c 100%);
         border-radius: 50%;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        color: #3d2400;
-        font-family: var(--font-serif);
-        font-weight: 700;
-        font-size: 0.75rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.6);
-        border: 2px dashed rgba(255, 255, 255, 0.4);
-        z-index: 5;
-        transition: opacity 0.4s ease, transform 0.4s ease;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.5), inset 0 -3px 6px rgba(0, 0, 0, 0.4);
+        border: 2px dashed rgba(255, 240, 220, 0.4);
+        z-index: 6;
+        transition: transform 0.5s ease, opacity 0.5s ease;
       }
 
-      .envelope.open .wax-seal {
-        opacity: 0;
+      .wax-seal-heart {
+        font-size: 1.4rem;
+        color: #fff8f0;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        margin-bottom: 2px;
+      }
+
+      .wax-seal-text {
+        font-family: var(--font-body);
+        font-size: 0.62rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #fff8f0;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+      }
+
+      .envelope-container.is-open .wax-seal {
         transform: translate(-50%, -50%) scale(0.2);
+        opacity: 0;
         pointer-events: none;
       }
 
-      /* Letter Card Inside */
-      .letter-card {
+      /* Open Subtitle Hint */
+      .open-hint {
+        margin-top: 28px;
+        text-align: center;
+        transition: opacity 0.5s ease;
+      }
+
+      .open-time {
+        font-family: var(--font-body);
+        font-size: 0.85rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--rose-gold-dark);
+        font-weight: 500;
+        background: rgba(255, 255, 255, 0.6);
+        padding: 8px 20px;
+        border-radius: 50px;
+        border: 1px solid var(--rose-gold-light);
+        backdrop-filter: blur(8px);
+        display: inline-block;
+      }
+
+      .envelope-container.is-open + .open-hint {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      /* ELEGANT LETTER PAPER (UNFOLDED) */
+      .letter-container {
         position: relative;
-        width: 94%;
-        margin: 0 auto 24px;
-        top: 16px;
-        background: linear-gradient(165deg, #fffdfa 0%, #f7f1e5 100%);
-        color: #2b1b24;
+        width: 100%;
+        max-width: 760px;
+        display: none;
+        opacity: 0;
+        transform: translateY(40px) scale(0.96);
+        transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 10;
+      }
+
+      .letter-container.is-visible {
+        display: block;
+      }
+
+      .letter-container.is-unfolded {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+
+      .letter-paper {
+        background: linear-gradient(175deg, #fdfbf7 0%, #f6efe4 100%);
         border-radius: 12px;
-        padding: 42px 36px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        z-index: 2;
-        transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), max-height 0.6s ease;
-        border: 1px solid #e3d5c3;
-        max-height: 280px;
+        padding: 70px 56px 60px;
+        box-shadow: 0 20px 60px rgba(140, 83, 57, 0.15), 0 4px 16px rgba(0, 0, 0, 0.05);
+        border: 1px solid #ebdcd0;
+        position: relative;
         overflow: hidden;
       }
 
-      .envelope.open .letter-card {
-        max-height: 4000px;
-        overflow: visible;
-        transform: translateY(-40px) scale(1.01);
-        z-index: 6;
+      /* Subtle paper edge shadow & inner border */
+      .letter-paper::before {
+        content: '';
+        position: absolute;
+        inset: 16px;
+        border: 1px solid rgba(197, 139, 112, 0.3);
+        border-radius: 8px;
+        pointer-events: none;
       }
 
-      .letter-content {
-        font-family: var(--font-serif);
-        font-size: 1.22rem;
-        line-height: 1.85;
-        color: #382430;
+      /* Decorative Floral SVG Ornaments */
+      .floral-corner {
+        position: absolute;
+        width: 64px;
+        height: 64px;
+        color: var(--rose-gold);
+        opacity: 0.45;
+        pointer-events: none;
       }
 
-      .letter-salutation {
-        font-family: var(--font-script);
-        font-size: 2.6rem;
-        color: #8b1a3a;
-        margin-bottom: 20px;
+      .floral-top-left { top: 24px; left: 24px; }
+      .floral-top-right { top: 24px; right: 24px; transform: scaleX(-1); }
+      .floral-bottom-left { bottom: 24px; left: 24px; transform: scaleY(-1); }
+      .floral-bottom-right { bottom: 24px; right: 24px; transform: scale(-1); }
+
+      /* Letter Header */
+      .letter-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .letter-title {
+        font-family: var(--font-heading);
+        font-size: clamp(3rem, 7vw, 4.8rem);
+        color: var(--rose-gold-dark);
         line-height: 1.2;
+        text-shadow: 0 2px 10px rgba(197, 139, 112, 0.15);
       }
 
+      .letter-divider {
+        width: 120px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--rose-gold), transparent);
+        margin: 16px auto 0;
+      }
+
+      /* Letter Content & Paragraphs */
       .letter-body {
-        margin-bottom: 24px;
-        text-align: left;
+        font-family: var(--font-body);
+        font-size: 1.05rem;
+        line-height: 1.9;
+        color: var(--text-charcoal);
+        font-weight: 300;
       }
 
       .letter-body p {
-        margin-bottom: 18px;
-        text-indent: 0;
+        margin-bottom: 22px;
+        text-align: justify;
       }
 
-      .letter-highlight {
-        background: rgba(139, 26, 58, 0.07);
-        border-left: 4px solid #8b1a3a;
-        padding: 14px 20px;
-        margin: 20px 0;
+      .letter-quote {
+        background: rgba(197, 139, 112, 0.08);
+        border-left: 3px solid var(--rose-gold);
+        padding: 16px 24px;
+        margin: 28px 0;
         font-style: italic;
-        font-size: 1.25rem;
-        border-radius: 0 10px 10px 0;
-        color: #5d1226;
+        font-size: 1.08rem;
+        color: var(--rose-gold-dark);
+        border-radius: 0 8px 8px 0;
+        line-height: 1.85;
       }
 
+      .letter-highlight-text {
+        font-weight: 500;
+        color: var(--rose-gold-dark);
+      }
+
+      /* Letter Signature */
       .letter-signature {
+        margin-top: 48px;
         text-align: right;
-        margin-top: 30px;
-        font-family: var(--font-script);
-        font-size: 2.6rem;
-        color: #8b1a3a;
+        padding-right: 10px;
       }
 
-      /* Action Bar */
-      .action-bar {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
-        justify-content: center;
-        margin-top: 30px;
-        z-index: 10;
-      }
-
-      .btn {
-        font-family: var(--font-sans);
+      .sig-sub {
+        font-family: var(--font-body);
         font-size: 0.95rem;
-        font-weight: 600;
-        padding: 14px 28px;
-        border-radius: 50px;
-        border: none;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        text-decoration: none;
+        color: var(--text-muted);
+        font-weight: 300;
+        margin-bottom: 4px;
       }
 
-      .btn-primary {
-        background: linear-gradient(135deg, #ffd700 0%, #e6a100 100%);
-        color: #261600;
-        box-shadow: 0 8px 24px rgba(255, 215, 0, 0.35);
+      .sig-name {
+        font-family: var(--font-heading);
+        font-size: 3.2rem;
+        color: var(--rose-gold-dark);
+        line-height: 1.1;
       }
 
-      .btn-primary:hover {
-        transform: translateY(-3px) scale(1.05);
-        box-shadow: 0 12px 30px rgba(255, 215, 0, 0.5);
-      }
+      /* Responsive Adjustments */
+      @media (max-width: 640px) {
+        .letter-paper {
+          padding: 46px 26px 40px;
+        }
 
-      .btn-secondary {
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--text-primary);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
-      }
+        .letter-paper::before {
+          inset: 10px;
+        }
 
-      .btn-secondary:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: translateY(-3px);
-      }
+        .floral-corner {
+          width: 44px;
+          height: 44px;
+        }
 
-      /* Photo Memories Gallery */
-      .memories-section {
-        margin-top: 60px;
-        width: 100%;
-        text-align: center;
-      }
+        .floral-top-left { top: 14px; left: 14px; }
+        .floral-top-right { top: 14px; right: 14px; }
+        .floral-bottom-left { bottom: 14px; left: 14px; }
+        .floral-bottom-right { bottom: 14px; right: 14px; }
 
-      .section-title {
-        font-family: var(--font-serif);
-        font-size: 2rem;
-        color: var(--accent-gold);
-        margin-bottom: 24px;
-      }
+        .envelope-container {
+          height: 290px;
+        }
 
-      .memory-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 20px;
-        width: 100%;
-      }
+        .envelope-flap {
+          height: 155px;
+        }
 
-      .polaroid {
-        background: #fff;
-        padding: 14px 14px 24px;
-        border-radius: 8px;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-        transform: rotate(calc((var(--i) - 2) * 3deg));
-        transition: all 0.4s ease;
-        color: #333;
-      }
+        .wax-seal {
+          top: 135px;
+          width: 80px;
+          height: 80px;
+        }
 
-      .polaroid:hover {
-        transform: scale(1.08) rotate(0deg);
-        z-index: 10;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-      }
+        .letter-body {
+          font-size: 0.98rem;
+          line-height: 1.8;
+        }
 
-      .polaroid-img {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
-        border-radius: 4px;
-        background: #f0e6df;
-      }
-
-      .polaroid-caption {
-        font-family: var(--font-script);
-        font-size: 1.6rem;
-        margin-top: 12px;
-        color: #5a2036;
-      }
-
-      /* Footer */
-      footer {
-        margin-top: 70px;
-        text-align: center;
-        font-size: 0.9rem;
-        color: rgba(255, 255, 255, 0.5);
-      }
-
-      @keyframes fadeInDown {
-        from { opacity: 0; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-
-      @media (max-width: 600px) {
-        body { padding: 24px 16px 60px; }
-        .envelope { height: 280px; }
-        .letter-card { padding: 24px 18px; }
-        .letter-content { font-size: 1.05rem; }
+        .letter-body p {
+          text-align: left;
+        }
       }
     </style>
   </head>
   <body>
-    <!-- Ambient Sparkles -->
-    <div class="ambient-canvas" id="sparkle-container"></div>
+    <!-- Background Floating Particles -->
+    <canvas id="particleCanvas"></canvas>
 
-    <div class="container">
-      <div class="top-badge">✨ A Birthday Celebration ✨</div>
+    <!-- Floating Music Controls -->
+    <div class="music-control" id="musicControl">
+      <button class="music-btn" id="musicToggleBtn" onclick="toggleMusic()">
+        <span class="music-pulse"></span>
+        <span id="musicBtnText">Pause Music</span>
+      </button>
+    </div>
 
-      <h1 class="birthday-title">Happy Birthday!</h1>
-      <p class="subtitle">A special digital letter written with love & warm wishes</p>
-
-      <!-- Interactive Envelope -->
-      <div class="envelope-wrapper" id="envelope-wrapper" onclick="toggleEnvelope()">
-        <div class="envelope" id="envelope">
-          <div class="flap"></div>
-          <div class="wax-seal">
-            <span>Tap To</span>
-            <span>Open</span>
-          </div>
-
-          <!-- The Letter Inside -->
-          <div class="letter-card" id="letter-card">
-            <div class="letter-salutation">Happy Birthday, my love. ❤️🎂</div>
-            <div class="letter-content">
-              <div class="letter-body">
-                <p>
-                  There are so many reasons why I'm grateful for you, but one memory will always stay with me. During one of the hardest phases of my life, when I felt lost, stressed, and didn't know how to move forward, you never gave up on me. You stood beside me, gave me your time, your care, and your strength when I needed it the most. I'll never forget that.
-                </p>
-                <p>
-                  You know me better than anyone. I overthink, I worry, and I get scared about things. But you're different. You're brave, calm, and fearless in ways I truly admire. Whenever I lose confidence, you're the one who reminds me that we can face anything together. Because of you, I've become a better and stronger person.
-                </p>
-                <div class="letter-highlight">
-                  "Thank you for loving me not only during the happy moments but also during the days when I wasn't at my best. That's the kind of love I'll always cherish."
-                </div>
-                <div class="letter-highlight">
-                  "This is the last birthday we'll celebrate before we become husband and wife, and that makes today even more special. I can't wait to spend the rest of my life with you, creating beautiful memories together."
-                </div>
-                <p>
-                  I pray that this year brings you endless happiness, good health, success, and everything your heart wishes for. You deserve nothing but the best.
-                </p>
-                <p>
-                  <strong>Happy Birthday, my future wife. ❤️</strong>
-                </p>
-                <p>
-                  I love you, today, tomorrow, and always.
-                </p>
-              </div>
-              <div class="letter-signature">Forever & Always Yours ❤️</div>
+    <!-- Main Viewport -->
+    <div class="app-viewport">
+      <div class="stage-wrapper" id="stageWrapper">
+        
+        <!-- Interactive Envelope -->
+        <div class="envelope-container" id="envelopeContainer" onclick="openLoveLetter()">
+          <div class="envelope-box">
+            <div class="envelope-flap"></div>
+            <div class="envelope-pocket"></div>
+            
+            <div class="wax-seal">
+              <span class="wax-seal-heart">❤️</span>
+              <span class="wax-seal-text">To My Love</span>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Action Buttons -->
-      <div class="action-bar">
-        <button class="btn btn-primary" onclick="triggerConfetti()">
-          🎉 Celebrate & Pop Confetti
-        </button>
-        <button class="btn btn-secondary" onclick="toggleEnvelope()">
-          ✉️ Open / Close Letter
-        </button>
-        <button class="btn btn-secondary" id="music-btn" onclick="toggleMusic()">
-          🎵 Play Birthday Melody
-        </button>
-      </div>
+        <div class="open-hint" id="openHint">
+          <span class="open-time">Open at 12:00 AM ✨</span>
+        </div>
 
-      <!-- Memory Gallery Section -->
-      <div class="memories-section">
-        <h2 class="section-title">Cherished Moments 📸</h2>
-        <div class="memory-grid">
-          <div class="polaroid" style="--i: 1">
-            <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80" alt="Birthday Celebration" class="polaroid-img" />
-            <div class="polaroid-caption">Joyful Times</div>
-          </div>
-          <div class="polaroid" style="--i: 2">
-            <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=600&q=80" alt="Balloons & Sparkles" class="polaroid-img" />
-            <div class="polaroid-caption">Warm Memories</div>
-          </div>
-          <div class="polaroid" style="--i: 3">
-            <img src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=600&q=80" alt="Birthday Cake" class="polaroid-img" />
-            <div class="polaroid-caption">Sweet Moments</div>
+        <!-- Full Page Unfolded Love Letter -->
+        <div class="letter-container" id="letterContainer">
+          <div class="letter-paper">
+            
+            <!-- Floral Corner Ornaments -->
+            <svg class="floral-corner floral-top-left" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20" />
+              <circle cx="25" cy="25" r="4" fill="currentColor" />
+              <circle cx="45" cy="15" r="3" fill="currentColor" />
+            </svg>
+            <svg class="floral-corner floral-top-right" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20" />
+              <circle cx="25" cy="25" r="4" fill="currentColor" />
+              <circle cx="45" cy="15" r="3" fill="currentColor" />
+            </svg>
+            <svg class="floral-corner floral-bottom-left" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20" />
+              <circle cx="25" cy="25" r="4" fill="currentColor" />
+              <circle cx="45" cy="15" r="3" fill="currentColor" />
+            </svg>
+            <svg class="floral-corner floral-bottom-right" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10,90 Q10,10 90,10 M10,50 Q50,10 90,10 M20,40 Q40,20 60,20" />
+              <circle cx="25" cy="25" r="4" fill="currentColor" />
+              <circle cx="45" cy="15" r="3" fill="currentColor" />
+            </svg>
+
+            <!-- Letter Heading -->
+            <div class="letter-header">
+              <h1 class="letter-title">Happy Birthday, My Love ❤️</h1>
+              <div class="letter-divider"></div>
+            </div>
+
+            <!-- Letter Content -->
+            <div class="letter-body">
+              <p>
+                There are so many reasons why I'm grateful for you, but one memory will always stay with me. During one of the hardest phases of my life, when I felt lost, stressed, and didn't know how to move forward, you never gave up on me. You stood beside me, gave me your time, your care, and your strength when I needed it the most. I'll never forget that.
+              </p>
+
+              <p>
+                You know me better than anyone. I overthink, I worry, and I get scared about things. But you're different. You're brave, calm, and fearless in ways I truly admire. Whenever I lose confidence, you're the one who reminds me that we can face anything together. Because of you, I've become a better and stronger person.
+              </p>
+
+              <div class="letter-quote">
+                "Thank you for loving me not only during the happy moments but also during the days when I wasn't at my best. That's the kind of love I'll always cherish."
+              </div>
+
+              <div class="letter-quote">
+                "This is the last birthday we'll celebrate before we become husband and wife, and that makes today even more special. I can't wait to spend the rest of my life with you, creating beautiful memories together."
+              </div>
+
+              <p>
+                I pray that this year brings you endless happiness, good health, success, and everything your heart wishes for. You deserve nothing but the best.
+              </p>
+
+              <p class="letter-highlight-text">
+                Happy Birthday, my future wife. ❤️
+              </p>
+
+              <p>
+                I love you, today, tomorrow, and always.
+              </p>
+            </div>
+
+            <!-- Letter Signature -->
+            <div class="letter-signature">
+              <p class="sig-sub">With all my love,</p>
+              <p class="sig-name">Abhishek ❤️</p>
+            </div>
+
           </div>
         </div>
-      </div>
 
-      <footer>
-        <p>Created with ❤️ | Ready for GitHub Pages deployment 🚀</p>
-      </footer>
+      </div>
     </div>
 
+    <!-- JavaScript & Audio Engine -->
     <script>
-      function toggleEnvelope() {
-        const envelope = document.getElementById("envelope");
-        const isOpen = envelope.classList.toggle("open");
-        if (isOpen) {
-          triggerConfetti();
+      /* --- Floating Particles Background (Canvas) --- */
+      const canvas = document.getElementById("particleCanvas");
+      const ctx = canvas.getContext("2d");
+      let width, height;
+
+      function resizeCanvas() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+
+      class Particle {
+        constructor() {
+          this.reset();
+        }
+
+        reset() {
+          this.x = Math.random() * width;
+          this.y = height + Math.random() * 100;
+          this.size = 1.5 + Math.random() * 3;
+          this.speedY = 0.3 + Math.random() * 0.7;
+          this.speedX = (Math.random() - 0.5) * 0.4;
+          this.opacity = 0.1 + Math.random() * 0.6;
+          this.isHeart = Math.random() < 0.25;
+        }
+
+        update() {
+          this.y -= this.speedY;
+          this.x += this.speedX;
+          if (this.y < -20) this.reset();
+        }
+
+        draw() {
+          ctx.save();
+          ctx.globalAlpha = this.opacity;
+          if (this.isHeart) {
+            ctx.fillStyle = "#e0b096";
+            ctx.font = `${this.size * 3.5}px sans-serif`;
+            ctx.fillText("♥", this.x, this.y);
+          } else {
+            ctx.fillStyle = "#f5efe6";
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "#e0b096";
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.restore();
         }
       }
 
-      function triggerConfetti() {
-        if (typeof confetti === "function") {
-          confetti({
-            particleCount: 100,
-            spread: 70,
-            origin: { y: 0.6 },
-            colors: ["#ffd700", "#ff6b8b", "#ffffff", "#e0d0e6", "#911f49"]
-          });
-        }
-      }
+      const particles = Array.from({ length: 45 }, () => new Particle());
 
-      function createSparkles() {
-        const container = document.getElementById("sparkle-container");
-        for (let i = 0; i < 30; i++) {
-          const sparkle = document.createElement("div");
-          sparkle.className = "sparkle";
-          sparkle.style.left = Math.random() * 100 + "vw";
-          sparkle.style.top = Math.random() * 100 + "vh";
-          sparkle.style.animationDelay = Math.random() * 5 + "s";
-          sparkle.style.animationDuration = (3 + Math.random() * 4) + "s";
-          container.appendChild(sparkle);
-        }
+      function animateParticles() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach((p) => {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(animateParticles);
       }
+      animateParticles();
 
-      // Synthesize Happy Birthday Melody with Web Audio API
+      /* --- Web Audio API Engine: Sound Effect & Piano Synth --- */
       let audioCtx = null;
       let isPlayingMusic = false;
-      let musicTimeout = null;
+      let pianoLoopInterval = null;
+
+      function initAudioContext() {
+        if (!audioCtx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContext();
+        }
+        if (audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
+      }
+
+      // Realistic Paper Unseal Sound Effect (Web Audio API)
+      function playPaperRustleSound() {
+        initAudioContext();
+        const bufferSize = audioCtx.sampleRate * 0.6;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buffer;
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = "bandpass";
+        filter.frequency.value = 1200;
+        filter.Q.value = 1.5;
+
+        const gain = audioCtx.createGain();
+        gain.gain.setValueAtTime(0, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.18, audioCtx.currentTime + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.55);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        noise.start();
+      }
+
+      // Gentle Romantic Piano Melody Synthesizer
+      function playPianoNote(freq, duration = 2.5, timeOffset = 0) {
+        if (!audioCtx || !isPlayingMusic) return;
+        const start = audioCtx.currentTime + timeOffset;
+
+        const osc1 = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc1.type = "sine";
+        osc2.type = "triangle";
+
+        osc1.frequency.value = freq;
+        osc2.frequency.value = freq * 2; // subtle harmonic chime
+
+        gain.gain.setValueAtTime(0, start);
+        gain.gain.linearRampToValueAtTime(0.08, start + 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.0008, start + duration);
+
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc1.start(start);
+        osc2.start(start);
+        osc1.stop(start + duration);
+        osc2.stop(start + duration);
+      }
+
+      const romanticChords = [
+        [261.63, 329.63, 392.00, 523.25], // C Major 7
+        [220.00, 261.63, 329.63, 440.00], // A Minor 7
+        [174.61, 261.63, 329.63, 349.23], // F Major 7
+        [196.00, 246.94, 293.66, 392.00]  // G Major
+      ];
+
+      function startGentlePianoMelody() {
+        if (isPlayingMusic) return;
+        initAudioContext();
+        isPlayingMusic = true;
+        document.getElementById("musicControl").classList.add("visible");
+        document.getElementById("musicBtnText").textContent = "Pause Music";
+
+        let chordIndex = 0;
+
+        function playChordArpeggio() {
+          if (!isPlayingMusic) return;
+          const chord = romanticChords[chordIndex];
+          chord.forEach((freq, idx) => {
+            playPianoNote(freq, 3.2, idx * 0.45);
+          });
+          chordIndex = (chordIndex + 1) % romanticChords.length;
+        }
+
+        playChordArpeggio();
+        pianoLoopInterval = setInterval(playChordArpeggio, 4200);
+      }
 
       function toggleMusic() {
-        const btn = document.getElementById("music-btn");
+        const btnText = document.getElementById("musicBtnText");
         if (isPlayingMusic) {
-          stopMusic();
-          btn.textContent = "🎵 Play Birthday Melody";
+          isPlayingMusic = false;
+          if (pianoLoopInterval) clearInterval(pianoLoopInterval);
+          btnText.textContent = "Play Music";
         } else {
-          playHappyBirthdayMelody();
-          btn.textContent = "⏸️ Pause Melody";
+          startGentlePianoMelody();
         }
       }
 
-      function stopMusic() {
-        isPlayingMusic = false;
-        if (musicTimeout) clearTimeout(musicTimeout);
-        if (audioCtx) {
-          audioCtx.close();
-          audioCtx = null;
-        }
+      /* --- Interactive Envelope Unfolding Logic --- */
+      let isOpened = false;
+
+      function openLoveLetter() {
+        if (isOpened) return;
+        isOpened = true;
+
+        const envelope = document.getElementById("envelopeContainer");
+        const hint = document.getElementById("openHint");
+        const letter = document.getElementById("letterContainer");
+
+        // 1. Play paper rustle sound effect
+        playPaperRustleSound();
+
+        // 2. Open envelope flap & hide seal
+        envelope.classList.add("is-open");
+        document.body.classList.add("letter-is-open");
+
+        // 3. Smooth transition to full letter
+        setTimeout(() => {
+          envelope.style.opacity = "0";
+          envelope.style.transform = "scale(0.8) translateY(-40px)";
+          if (hint) hint.style.opacity = "0";
+        }, 600);
+
+        setTimeout(() => {
+          envelope.style.display = "none";
+          if (hint) hint.style.display = "none";
+
+          letter.classList.add("is-visible");
+          requestAnimationFrame(() => {
+            letter.classList.add("is-unfolded");
+          });
+
+          // 4. Start gentle piano background music after letter unfolds
+          setTimeout(() => {
+            startGentlePianoMelody();
+          }, 1000);
+        }, 1100);
       }
-
-      function playHappyBirthdayMelody() {
-        stopMusic();
-        isPlayingMusic = true;
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AudioContext();
-
-        const notes = [
-          { note: "C4", duration: 0.35 }, { note: "C4", duration: 0.35 },
-          { note: "D4", duration: 0.7 }, { note: "C4", duration: 0.7 },
-          { note: "F4", duration: 0.7 }, { note: "E4", duration: 1.2 },
-          { note: "C4", duration: 0.35 }, { note: "C4", duration: 0.35 },
-          { note: "D4", duration: 0.7 }, { note: "C4", duration: 0.7 },
-          { note: "G4", duration: 0.7 }, { note: "F4", duration: 1.2 },
-          { note: "C4", duration: 0.35 }, { note: "C4", duration: 0.35 },
-          { note: "C5", duration: 0.7 }, { note: "A4", duration: 0.7 },
-          { note: "F4", duration: 0.7 }, { note: "E4", duration: 0.7 }, { note: "D4", duration: 0.7 },
-          { note: "A#4", duration: 0.35 }, { note: "A#4", duration: 0.35 },
-          { note: "A4", duration: 0.7 }, { note: "F4", duration: 0.7 },
-          { note: "G4", duration: 0.7 }, { note: "F4", duration: 1.4 }
-        ];
-
-        const freqs = {
-          "C4": 261.63, "D4": 293.66, "E4": 329.63, "F4": 349.23,
-          "G4": 392.00, "A4": 440.00, "A#4": 466.16, "C5": 523.25
-        };
-
-        let currTime = audioCtx.currentTime + 0.1;
-
-        notes.forEach(({ note, duration }) => {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-
-          osc.type = "sine";
-          osc.frequency.value = freqs[note];
-
-          gain.gain.setValueAtTime(0, currTime);
-          gain.gain.linearRampToValueAtTime(0.18, currTime + 0.05);
-          gain.gain.exponentialRampToValueAtTime(0.001, currTime + duration);
-
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-
-          osc.start(currTime);
-          osc.stop(currTime + duration);
-
-          currTime += duration + 0.08;
-        });
-
-        const totalMs = (currTime - audioCtx.currentTime) * 1000;
-        musicTimeout = setTimeout(() => {
-          if (isPlayingMusic) {
-            document.getElementById("music-btn").textContent = "🎵 Play Birthday Melody";
-            isPlayingMusic = false;
-          }
-        }, totalMs);
-      }
-
-      document.addEventListener("DOMContentLoaded", () => {
-        createSparkles();
-        setTimeout(() => triggerConfetti(), 800);
-      });
     </script>
   </body>
 </html>
