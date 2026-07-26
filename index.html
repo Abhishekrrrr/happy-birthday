@@ -512,7 +512,7 @@
     <div class="music-widget" id="musicWidget">
       <button class="music-btn" id="musicToggleBtn" onclick="toggleMusic()">
         <span class="music-pulse"></span>
-        <span id="musicBtnText">Pause Music</span>
+        <span id="musicBtnText">♪ I Found You</span>
       </button>
     </div>
 
@@ -870,32 +870,43 @@
       noise.start();
     }
 
-    // Richer piano: melody + bass chords
+    // ── "I Found You" – The Wanted  (piano melody + bass, key of C major) ──
     const noteFreq = {
-      "E3":164.81,"A3":220.00,"E4":329.63,"F#4":369.99,"G#4":415.30,
-      "A4":440.00,"B4":493.88,"C#5":554.37,"D5":587.33,"E5":659.25,
+      // treble
+      "C4":261.63,"D4":293.66,"E4":329.63,"F4":349.23,"G4":392.00,
+      "A4":440.00,"B4":493.88,
+      "C5":523.25,"D5":587.33,"E5":659.25,"F5":698.46,"G5":783.99,"A5":880.00,
       // bass
-      "A2":110.00,"E2":82.41,"C#3":138.59,"B2":123.47
+      "C3":130.81,"G3":196.00,"A3":220.00,"F3":174.61,"E3":164.81,"B2":123.47
     };
 
-    // Melody motif (River Flows in You)
+    // "I Found You" iconic intro/chorus piano riff (C major)
+    // Pattern: C-E-G-E  C-E-G-A  F-A-C-A  G-B-D-B  (repeating)
     const melody = [
-      {n:"A4",d:0.35},{n:"G#4",d:0.35},{n:"A4",d:0.35},{n:"G#4",d:0.35},
-      {n:"A4",d:0.35},{n:"E4",d:0.7},{n:"A4",d:0.7},
-      {n:"A4",d:0.35},{n:"G#4",d:0.35},{n:"A4",d:0.35},{n:"G#4",d:0.35},
-      {n:"A4",d:0.35},{n:"E4",d:0.35},{n:"C#5",d:0.7},{n:"B4",d:0.7},
-      {n:"C#5",d:0.35},{n:"B4",d:0.35},{n:"C#5",d:0.35},{n:"B4",d:0.35},
-      {n:"C#5",d:0.35},{n:"G#4",d:0.7},{n:"A4",d:0.7},
-      {n:"B4",d:0.35},{n:"A4",d:0.35},{n:"G#4",d:0.35},{n:"F#4",d:0.7},
-      {n:"E4",d:1.2}
+      // bar 1 — C major arpeggio up
+      {n:"C4",d:0.22},{n:"E4",d:0.22},{n:"G4",d:0.22},{n:"E4",d:0.22},
+      // bar 2 — C major with high A
+      {n:"C4",d:0.22},{n:"E4",d:0.22},{n:"G4",d:0.22},{n:"A4",d:0.22},
+      // bar 3 — F major arpeggio
+      {n:"F4",d:0.22},{n:"A4",d:0.22},{n:"C5",d:0.22},{n:"A4",d:0.22},
+      // bar 4 — G major arpeggio
+      {n:"G4",d:0.22},{n:"B4",d:0.22},{n:"D5",d:0.22},{n:"B4",d:0.22},
+      // bar 5 — repeat C higher
+      {n:"C5",d:0.22},{n:"E5",d:0.22},{n:"G5",d:0.22},{n:"E5",d:0.22},
+      // bar 6 — C major again
+      {n:"C5",d:0.22},{n:"E5",d:0.22},{n:"G5",d:0.22},{n:"A5",d:0.22},
+      // bar 7 — F major high
+      {n:"F5",d:0.22},{n:"A5",d:0.22},{n:"C5",d:0.44},
+      // bar 8 — resolve G → C
+      {n:"G4",d:0.22},{n:"B4",d:0.22},{n:"D5",d:0.22},{n:"C5",d:0.55}
     ];
 
-    // Bass chord pattern (every 1.4s cycle, one chord per measure of 4 melody notes)
+    // Bass chords (one per bar, 4/4 feel): C  C  F  G  C  C  F  G
     const bassPattern = [
-      ["A2","E3","A3"],  // A minor
-      ["A2","E3","A3"],
-      ["E2","B2","E3"],  // E
-      ["C#3","G#3","C#4"] // C#m  — approximated
+      ["C3","G3","C4"],   // C major
+      ["C3","G3","E3"],   // C major
+      ["F3","A3","C4"],   // F major
+      ["G3","B2","D4"],   // G major — D4 approximated via treble
     ];
 
     function playNote(freq, duration, gainVal=0.06, type="triangle") {
@@ -953,8 +964,9 @@
       if (isPlayingMusic) {
         isPlayingMusic = false;
         if (pianoTimeout) clearTimeout(pianoTimeout);
-        btnText.textContent = "Play Music";
+        btnText.textContent = "▶ Play Music";
       } else {
+        btnText.textContent = "♪ I Found You";
         startPianoMelody();
       }
     }
